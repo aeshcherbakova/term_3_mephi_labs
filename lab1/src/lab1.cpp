@@ -160,8 +160,9 @@ namespace lab1 {
 			if (getNum(matr->NZ_items) < 0) return 0;
 		} while (matr->NZ_items <= 0);
 
-		// выделение памяти
-		if(!new_array(matr->items, matr->NZ_items)) return 0;
+		// если человеку приспичит впихнуть 1000 элементов в матрицу 5*5
+		if (matr->NZ_items > matr->m * matr->n) matr->NZ_items = matr->m * matr->n;
+		if(!new_array(matr->items, matr->NZ_items)) return 0;     // выделение памяти
 
 		// ввод самих чисел
 		for (int i = 0; i < matr->NZ_items; i++) {
@@ -172,7 +173,18 @@ namespace lab1 {
 				erase(matr);
 				return 0;
 			}
-			// если пользователь тупой
+
+			// проверки на случай, если пользователь тупой
+			if (temp->row < 0 || temp->row > matr->m - 1) {
+				std::cout << "Row of item must be >= 0 and < number of rows in matrix!" << std::endl;
+				i--;
+				continue;
+			}
+			if (temp->column < 0 || temp->column > matr->n - 1) {
+				std::cout << "Column of item must be >= 0 and < number of columns in matrix!" << std::endl;
+				i--;
+				continue;
+			}
 			if (!temp->value) {
 				std::cout << "This item must be not zero!" << std::endl;
 				i--;
@@ -248,11 +260,12 @@ namespace lab1 {
 
 				ptr = matr->items + start_line_offset;
 				//new_matr_ptr = new_matr->items + temp_line_offset;
+				int flag = false;    // флаг = 0, пока неноль не перемещен, = 1 после перемещения
 				for (int k = start_line_offset; k <= end_line_offset; k++, ptr++, new_matr_ptr++) {
 
 					// неноль надо впихнуть на место нуля - находим ближайший слева от него неноль
 					// сюда входят случаи: ptr - последний в матрице / последний в строке / последний перед тем, куда надо вставить тот
-					if (not_zero && (k == end_line_offset || (ptr + 1)->column >= zero_column || (ptr + 1)->row != i)) {
+					if (!flag && (k == end_line_offset || (ptr + 1)->column >= zero_column || (ptr + 1)->row != i)) {
 						// сначала копируем текущее значение, если это не not_zero
 						if (ptr->column != not_zero->column) {
 							*new_matr_ptr = { i, ptr->column, ptr->value };
@@ -261,10 +274,10 @@ namespace lab1 {
 
 						// после него вставляем not_zero
 						*new_matr_ptr = { i, zero_column, not_zero->value };
-						not_zero = nullptr;  // чтобы случайно не вставить несколько раз
+						flag = true;   // чтобы случайно не вставить несколько раз
 					}
 					// неноль, который перемещаем, копировать не надо
-					else if (not_zero && ptr->column == not_zero->column)
+					else if (ptr->column == not_zero->column)
 						new_matr_ptr--;
 					// если мы далеко от I и J, тогда копируем обычным способом
 					else *new_matr_ptr = { i, ptr->column, ptr->value };
