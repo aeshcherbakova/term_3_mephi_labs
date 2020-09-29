@@ -1,8 +1,10 @@
 #include <iostream>
 #include "lab1.h"
 
-
 namespace lab1 {
+
+	//const int MAX_INT = pow(2, 8 * sizeof(int) - 1) - 1;
+	const int MAX_INT = std::numeric_limits<int>::max();
 
 
 	// функция ввода размеров матрицы с выводом сообщений об ошибке
@@ -12,7 +14,11 @@ namespace lab1 {
 		do {
 			std::cout << pr << std::endl << msg;
 			pr = "You are wrong. Repeat, please!";
-			if (getNum(dest) < 0) return 0;
+			getNum(dest);
+			/*if (getNum(dest) < 0) {
+				std::cin.clear();
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			} */
 		} while (dest < 1);
 		return 1;
 	}
@@ -38,10 +44,11 @@ namespace lab1 {
 		Matrix* matr = new Matrix({ 0, 0, 0, nullptr });
 
 		// сначала вводятся размеры прямоугольной матрицы
-		if (!input_size("Enter number of rows in matrix ---> ", matr->m)) return nullptr;
-		if (!input_size("Enter number of columns in matrix ---> ", matr->n)) return nullptr;
+		input_size("Enter number of rows in matrix ---> ", matr->m);
+		input_size("Enter number of columns in matrix ---> ", matr->n);
 
-		if (matr->n > 2147483647 / matr->m ||  matr->n * matr->m > 20) {
+		std::cout << MAX_INT;
+		if (matr->n > MAX_INT / matr->m ||  matr->n * matr->m > 20) {
 			std::cout << "If you want to input all matrix, type '1', if you want to input only not zero items, input '2' --> ";
 			int ans = 0;
 			const char* pr = "";
@@ -94,7 +101,8 @@ namespace lab1 {
 		// сначала выделяем память под 20% или 50% от кол-ва элементов
 		int size = 0;
 		// если человеку приспичило сделать матрицу больше, чем вмещает инт
-		if (matr->n > 2147483647 / matr->m) size = 1000000;
+
+		if (matr->n > MAX_INT / matr->m) size = 1000000;
 		else {
 			int full_size = matr->n * matr->m;
 			size = (full_size > 100) ? (full_size / 10) : (full_size / 2 + 1);

@@ -1,5 +1,5 @@
 #pragma once
-
+#include <limits>
 
 namespace lab1 {
 
@@ -25,8 +25,11 @@ namespace lab1 {
 	template <class T>
 	int getNum(T& a) {
 		std::cin >> a;
-		if (!std::cin.good())   // обнаружена ошибка ввода или конец файла
-			return -1;
+		if (!std::cin.good()) {   // обнаружена ошибка ввода или конец файла
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+		//	return -1;
 		return 1;
 	}
 
