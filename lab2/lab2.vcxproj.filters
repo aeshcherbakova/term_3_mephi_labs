@@ -21,9 +21,6 @@
     <ClCompile Include="src\lab2_main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\Testing.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Hypocycloid.h">

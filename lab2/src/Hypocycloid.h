@@ -27,7 +27,7 @@ namespace lab2 {
 
 	public:
 		// конструкторы
-		Hypocycloid(double k = 3) : r_ex(k), r_in(1), d(1) {};  // пустой конструктор, определяется коэффициентом k - отношением внешнего радиуса к внутреннему
+		Hypocycloid(double k = 1);  // пустой конструктор, определяется коэффициентом k - отношением внешнего радиуса к внутреннему
 		Hypocycloid(double R, double r);
 		Hypocycloid(double R, double r, double d);
 
@@ -63,6 +63,7 @@ namespace lab2 {
 				c.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			} else return 1;
 		}
+		return -1;
 	}
 
 

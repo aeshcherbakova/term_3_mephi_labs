@@ -8,7 +8,8 @@ namespace lab2 {
 	const char* exceptions[]{
 		"External radius must be bigger than 0",
 		"Internal radius must be bigger than 0",
-		"Internal radius must be less than external"
+		"Internal radius must be less than external",
+		"Coefficient must be bigger than 0"
 	};
 
 	const char* menu[]{
@@ -25,6 +26,11 @@ namespace lab2 {
 
 
 	// конструкторы
+	Hypocycloid::Hypocycloid(double k) {
+		if (k <= 0) throw std::exception(exceptions[3]);
+		r_ex = k, r_in = 1, d = 1;
+	}
+
 	Hypocycloid::Hypocycloid(double R, double r) {
 		if (R <= 0) throw std::exception(exceptions[0]);
 		if (r <= 0) throw std::exception(exceptions[1]);

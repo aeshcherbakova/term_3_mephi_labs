@@ -2,7 +2,7 @@
 #include "Hypocycloid.h"
 
 int main() {
-	lab2::Hypocycloid test(5, 3, 2);
+	lab2::Hypocycloid test;
 	if (!lab2::D_change_params(test)) return 0;
 
 	int choice;

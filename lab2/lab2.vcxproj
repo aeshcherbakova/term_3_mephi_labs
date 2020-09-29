@@ -141,7 +141,6 @@
   <ItemGroup>
     <ClCompile Include="src\Hypocycloid.cpp" />
     <ClCompile Include="src\lab2_main.cpp" />
-    <ClCompile Include="src\Testing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Hypocycloid.h" />
