@@ -2,6 +2,8 @@
 #include "Hypocycloid.h"
 
 int main() {
+	std::cout.precision(6); 
+
 	lab2::Hypocycloid test;
 	if (!lab2::D_change_params(test)) return 0;
 
@@ -12,6 +14,6 @@ int main() {
 		}
 		else if (!lab2::fptr[choice](test, std::cin, std::cout)) break;
 
-	std::cout << "That's all, bye! :)";
+	std::cout << "That's all, bye! :)" << std::endl;
 	return 0;
 }

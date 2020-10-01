@@ -6,7 +6,7 @@
 TEST(HypocycloidConstructor, DefaultConstructor)
 {
 	lab2::Hypocycloid h1;
-	ASSERT_EQ(1, h1.getR_EX());
+	ASSERT_EQ(3, h1.getR_EX());
 	ASSERT_EQ(1, h1.getR_IN());
 	ASSERT_EQ(1, h1.getD());
 }
@@ -57,12 +57,45 @@ TEST(HypocycloidMethods, Setters)
 }
 
 // тестирование других методов
-
-/*
-int _tmain(int argc, _TCHAR* argv[])
+TEST(HypocycloidMethods, Parameters)
 {
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	lab2::Hypocycloid a;
+	lab2::Hypocycloid b(5, 4, 6);
+	lab2::Hypocycloid c(5, 4, 3);
+
+	ASSERT_STREQ("Ordinary", a.type());
+	ASSERT_STREQ("Elongated", b.type());
+	ASSERT_STREQ("Shortened", c.type());
+
+	ASSERT_EQ(lab2::Point(3, 1), a.limiting_radii());
+	ASSERT_EQ(lab2::Point(7, 5), b.limiting_radii());
+	ASSERT_EQ(lab2::Point(4, 2), c.limiting_radii());
 }
-*/
+
+TEST(HypocycloidMethods, Angle)
+{
+	const double err = 0.0001;
+	double pi = 3.14159;
+	lab2::Hypocycloid a;
+	lab2::Hypocycloid b(10, 2, 3);
+	lab2::Hypocycloid c(5, 4);
+
+	// радиус кривизны
+	ASSERT_NEAR(8, a.curvature_radius(pi), err);   // можно проверить в построителе
+	ASSERT_NEAR(0.2857, b.curvature_radius(0), err);
+	ASSERT_NEAR(5.0612, c.curvature_radius(2), err);
+
+	// точка на графике
+	ASSERT_NEAR(3, a.point_from_angle(0).x, err);
+	ASSERT_NEAR(0, a.point_from_angle(0).y, err);
+	ASSERT_NEAR(-5.388378, b.point_from_angle(3).x, err);
+	ASSERT_NEAR(2.738678, b.point_from_angle(3).y, err);
+	ASSERT_NEAR(-3, c.point_from_angle(-4*pi).x, err);
+	ASSERT_NEAR(0, c.point_from_angle(-4*pi).y, err);
+
+	// cекториальная площадь
+	ASSERT_NEAR(0, a.area(0), err);
+	ASSERT_NEAR(29.191129, b.area(0.5*pi), err);
+	ASSERT_NEAR(-10.624769, c.area(2*pi), err);
+}
 

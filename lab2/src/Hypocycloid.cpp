@@ -73,15 +73,20 @@ namespace lab2 {
 	}
 
 	// функция возвращет радиус кривизны гипоциклоиды в зависимости от угла поворота альфа
+	// если происходит деление на ноль, возвращает -1
 	double Hypocycloid::curvature_radius(double alpha) const {
-		double cosine = cos(r_ex * alpha / r_in);
-		double numerator = pow(r_in * r_in + d * d - 2 * d * r_in * cosine, 3 / 2);
+		double cosine = (alpha == 0) ? 1 : cos(r_ex * alpha / r_in);
+		double numerator = pow(r_in * r_in + d * d - 2 * d * r_in * cosine, 1.5);
+		if (numerator == 0) return 0;
 		double denominator = -pow(r_in, 3) + d * d * (r_ex - r_in) - d * r_in * (r_ex - 2 * r_in) * cosine;
-		return (r_ex - r_in) * numerator / abs(denominator);
+		if (denominator == 0) return -1;
+		double res = (r_ex - r_in) * numerator / abs(denominator);
+		return res;
 	}
 
 	// функция возвращает секториальную площадь гипоциклоиды в зависимости от угла поворота альфа внутреннего круга
 	double Hypocycloid::area(double alpha) const {
+		if (alpha == 0) return 0;
 		double sine = sin(r_ex * alpha / r_in);
 		double bracket = alpha * (r_ex - r_in - d * d / r_in) + d * (r_ex - 2 * r_in) * sine / r_ex;
 		return (r_ex - r_in) * bracket / 2;
@@ -103,7 +108,7 @@ namespace lab2 {
 	// вывод на экран всех параметров гипоциклоиды, зависящих только от радиусов и d
 	void print_parameters(const Hypocycloid& h, std::ostream& c) {
 		c << std::endl << "Your hypocycloid parameters:" << std::endl;
-		c << "R = " << h.getR_EX() << ", r = " << h.getR_IN() << ", d = " << h.getD()<< std::endl;
+		c << "R = " << h.getR_EX() << ", r = " << h.getR_IN() << ", d = " << h.getD() << std::endl;
 
 		// вывод типа гипоциклоиды
 		const char* s = h.type();
@@ -128,7 +133,7 @@ namespace lab2 {
 
 	int D_find_point(const Hypocycloid& h, std::istream& istr, std::ostream& ostr) {
 		double alpha = 0;
-		if (!D_input_angle(alpha, istr, ostr)) return 0;   
+		if (!D_input_angle(alpha, istr, ostr)) return 0;
 		Point res = h.point_from_angle(alpha);
 		ostr << "Result: (" << res.x << ", " << res.y << ")" << std::endl;
 		return 1;
@@ -138,7 +143,9 @@ namespace lab2 {
 		double alpha = 0;
 		if (!D_input_angle(alpha, istr, ostr)) return 0;
 		double res = h.curvature_radius(alpha);
-		ostr << "Curvature radius = " << res << std::endl;
+		// функция вернула -1, если произошло деление на ноль
+		if (res == -1) ostr << "Curvature radius cannot be calculated in this point :/" << std::endl;
+		else ostr << "Curvature radius = " << res << std::endl;
 		return 1;
 	}
 
@@ -159,7 +166,7 @@ namespace lab2 {
 			if (!getNum(R, istr)) return 0;
 			try { h.setR_EX(R); }
 			catch (std::exception& ex) { R = 0, ostr << ex.what() << std::endl; }
-		}  while (R == 0);
+		} while (R == 0);
 
 		// изменение внутреннего радиуса
 		do {
@@ -193,11 +200,4 @@ namespace lab2 {
 		} while (input < 0 || input >= NMsgs);
 		return input;
 	}
-
-
-
 }
-
-
-
-

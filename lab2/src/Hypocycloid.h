@@ -16,6 +16,11 @@ namespace lab2 {
 	struct Point {
 		double x, y; // координаты точки на плоскости
 		Point(double x0 = 0, double y0 = 0) :x(x0), y(y0) {}   // пустой конструктор, просто чтобы мусора не было
+
+		// перегрузка оператора, чтобы меньше писать в тестах (public по умолчанию)
+		friend bool operator==(const Point& a, const Point& b) {
+			return (a.x == b.x && a.y == b.y);
+		}
 	};
 
 
@@ -27,7 +32,7 @@ namespace lab2 {
 
 	public:
 		// конструкторы
-		Hypocycloid(double k = 1);  // пустой конструктор, определяется коэффициентом k - отношением внешнего радиуса к внутреннему
+		Hypocycloid(double k = 3);  // пустой конструктор, определяется коэффициентом k - отношением внешнего радиуса к внутреннему
 		Hypocycloid(double R, double r);
 		Hypocycloid(double R, double r, double d);
 
@@ -50,20 +55,20 @@ namespace lab2 {
 		double curvature_radius(double alpha) const;
 		double area(double alpha) const;
 
-	};
+	};  // class Hypocycloid
 
 
 	// шаблон функций ввода одного значения произвольного типа
 	template <class T>
 	int getNum(T& a, std::istream& c = std::cin) {
-		while (c >> a) {
+		do {
+			c >> a;
 			if (c.eof()) return 0;     // обнаружен конец файла
 			if (!c.good()) {          // обнаружена ошибка ввода     
 				c.clear();
 				c.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			} else return 1;
-		}
-		return -1;
+		} while (1);
 	}
 
 
@@ -84,11 +89,4 @@ namespace lab2 {
 	int D_input_angle(double&, std::istream& = std::cin, std::ostream& = std::cout);
 }
 
-
 #endif
-
-
-
-
-
-
