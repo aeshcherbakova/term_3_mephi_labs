@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3d5241d4-6b59-4b72-9e67-9c3be46c9f53}</ProjectGuid>
+    <ProjectGuid>{c4694d05-268e-4278-9612-48ce2d5b8e34}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ConfigurationType>Application</ConfigurationType>
@@ -45,8 +45,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lab2.vcxproj">
-      <Project>{c74c10e3-8d01-4ba6-a910-3daa780a2e9a}</Project>
+    <ProjectReference Include="..\Hypocycloid\Hypocycloid.vcxproj">
+      <Project>{4b56f747-3b73-46bf-958d-a42c488c21a6}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

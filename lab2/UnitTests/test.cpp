@@ -1,6 +1,5 @@
 #include "pch.h"
-#include "../src/Hypocycloid.h"
-#include "../src/Hypocycloid.cpp"
+#include "../Hypocycloid/Hypocycloid.h"
 
 // Тестирование конструкторов
 TEST(HypocycloidConstructor, DefaultConstructor)
@@ -22,7 +21,7 @@ TEST(HypocycloidConstructor, InitConstructors)
 	ASSERT_EQ(5, h3.getR_EX());
 	ASSERT_EQ(3, h3.getR_IN());
 	ASSERT_EQ(3, h3.getD());
-	
+
 	lab2::Hypocycloid h4(12, 3, 2);
 	ASSERT_EQ(12, h4.getR_EX());
 	ASSERT_EQ(3, h4.getR_IN());
@@ -36,7 +35,15 @@ TEST(HypocycloidConstructor, TestException)
 	ASSERT_ANY_THROW(lab2::Hypocycloid(-6, 5));
 	ASSERT_ANY_THROW(lab2::Hypocycloid(7, 10));
 	ASSERT_ANY_THROW(lab2::Hypocycloid(7, 0));
-	ASSERT_ANY_THROW(lab2::Hypocycloid(7, -5, 9));
+
+	// неправильно выкидываю исключения в принципе - они должны быть объектами, а не строками (см документацию)
+	try { lab2::Hypocycloid(7, -5, 9); }
+	catch (std::exception& err) {
+		std::cout << err.what();
+		EXPECT_EQ(err.what(), std::string("Internal radius must be bigger than 0"));
+	}
+	catch (...) { FAIL() << "Expected other exception"; }
+	//ASSERT_ANY_THROW(lab2::Hypocycloid(7, -5, 9));
 }
 
 // тестирование сеттеров
@@ -53,7 +60,7 @@ TEST(HypocycloidMethods, Setters)
 	ASSERT_ANY_THROW(h.setR_EX(-5));
 	ASSERT_ANY_THROW(h.setR_IN(10));
 	ASSERT_ANY_THROW(h.setR_IN(0));
-	ASSERT_ANY_THROW(h.setR_IN(-12));	
+	ASSERT_ANY_THROW(h.setR_IN(-12));
 }
 
 // тестирование других методов
@@ -90,12 +97,18 @@ TEST(HypocycloidMethods, Angle)
 	ASSERT_NEAR(0, a.point_from_angle(0).y, err);
 	ASSERT_NEAR(-5.388378, b.point_from_angle(3).x, err);
 	ASSERT_NEAR(2.738678, b.point_from_angle(3).y, err);
-	ASSERT_NEAR(-3, c.point_from_angle(-4*pi).x, err);
-	ASSERT_NEAR(0, c.point_from_angle(-4*pi).y, err);
+	ASSERT_NEAR(-3, c.point_from_angle(-4 * pi).x, err);
+	ASSERT_NEAR(0, c.point_from_angle(-4 * pi).y, err);
 
 	// cекториальная площадь
 	ASSERT_NEAR(0, a.area(0), err);
-	ASSERT_NEAR(29.191129, b.area(0.5*pi), err);
-	ASSERT_NEAR(-10.624769, c.area(2*pi), err);
+	ASSERT_NEAR(29.191129, b.area(0.5 * pi), err);
+	ASSERT_NEAR(-10.624769, c.area(2 * pi), err);
 }
 
+
+int main(int argc, char* argv[])
+{
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
+}
