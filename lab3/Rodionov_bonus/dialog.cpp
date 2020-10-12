@@ -118,6 +118,8 @@ namespace Prog3C {
         for (int i = 0; i < carriages_number; i++) {
             min_train[i] = getNum<int>("");
             mini_cars[i] = { main_train.get_carriages()[min_train[i]].maximum_capacity, main_train.get_carriages()[min_train[i]].occupied_seats_number };
+            delete[] mini_train;
+            delete[] mini_cars;
         }
         
         try {
