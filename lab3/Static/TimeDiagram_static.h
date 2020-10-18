@@ -13,8 +13,8 @@ namespace lab3 {
 		int duration;
 
 		Signal() : state(0), duration(0) {};   // default constructor
-		Signal(int state, int duration = 1);
-		Signal(Signal& other) : state(other.state), duration(other.duration) {}; // copy constructor
+		Signal(const int state, const int duration = 1);
+		Signal(const Signal& other) : state(other.state), duration(other.duration) {}; // copy constructor
 
 		Signal& operator=(const Signal& other) noexcept;   // assignmet operator
 		Signal& operator ++();
@@ -28,20 +28,19 @@ namespace lab3 {
 		int num_of_signals;                         // number of elements in signals array
 		Signal signals[max_duration];               // array of signals
 
-
-		TimeDiagram& erase(int offset = 0);
+		TimeDiagram& erase(const int offset = 0);
 
 	public:
 
 		// constructors
-		TimeDiagram() noexcept;                        // default constructor
-		TimeDiagram(int state);                        // constant signal
-		TimeDiagram(const Signal arr[], int size);     // initializing with arra
-		TimeDiagram(const TimeDiagram& TD) noexcept;   // copy constructor
-		TimeDiagram(std::string s);                    // ASCII-string
+		TimeDiagram() noexcept;                           // default constructor
+		TimeDiagram(const int state);                     // constant signal
+		TimeDiagram(const Signal arr[], const int size);  // initializing with arra
+		TimeDiagram(const TimeDiagram& TD) noexcept;      // copy constructor
+		TimeDiagram(const std::string s);                 // ASCII-string
 
 		// setters & getters
-		TimeDiagram& set_Signals(const Signal* arr, int length);
+		TimeDiagram& set_Signals(const Signal* arr, const int length);
 		int get_Max_Duration()   const noexcept { return max_duration; };
 		int get_Temp_Duration()  const noexcept;
 		int get_Num_of_Signals() const noexcept { return num_of_signals; };
@@ -52,12 +51,12 @@ namespace lab3 {
 		friend std::istream& operator >> (std::istream& istr, TimeDiagram& td);
 		TimeDiagram& operator=(const TimeDiagram& TD) noexcept;
 		TimeDiagram operator+(const TimeDiagram& other) const;
-		TimeDiagram& operator*=(int mult);
-		TimeDiagram& operator()(const TimeDiagram& other, int offset);
+		TimeDiagram& operator*=(const int mult);
+		TimeDiagram& operator()(const TimeDiagram& other, const int offset);
 
 		// shifts to left/right
-		TimeDiagram& operator<<=(int shift);
-		TimeDiagram& operator>>=(int shift);
+		TimeDiagram& operator<<=(const int shift);
+		TimeDiagram& operator>>=(const int shift);
 	};
 
 }

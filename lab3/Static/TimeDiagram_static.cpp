@@ -1,12 +1,11 @@
-﻿#include "pch.h"
-#include "TimeDiagram_static.h"
+﻿#include "TimeDiagram_static.h"
 
 namespace lab3 {
 
 //    #############         СТРУКТУРА СИГНАЛ          #############
 
 	// конструктр сигнала (если не указана длительность, то берем 1)
-	Signal::Signal(int state, int duration) {
+	Signal::Signal(const int state, const int duration) {
 		if (state != 1 && state != X && state != 0)
 			throw std::invalid_argument("invalid state!");
 		if (duration < 0) 
@@ -37,7 +36,7 @@ namespace lab3 {
 	//    #############         КОНСТРУКТОРЫ          #############
 
 	// очистка диаграммы (private) offset - начиная с какого номера элемента занулять массив
-	TimeDiagram& TimeDiagram::erase(int offset) {
+	TimeDiagram& TimeDiagram::erase(const int offset) {
 		for (int i = offset; i < num_of_signals; i++)
 			signals[i] = Signal();   // сброс сигнала в {0, 0} конструктором по умолчанию
  		num_of_signals = 0;
@@ -52,7 +51,7 @@ namespace lab3 {
 	}
 
 	// конструктор создания диаграммы с постоянным сигналом на всю длину
-	TimeDiagram::TimeDiagram(int state) {
+	TimeDiagram::TimeDiagram(const int state) {
 		try { signals[0] = Signal(state, max_duration); }
 		catch (...) { throw; }
 		num_of_signals = 1;
@@ -68,7 +67,7 @@ namespace lab3 {
 	
 	// конструктор с инициализацией готовым массивом сигналов
 	// здесь size - количество ненулевых сигналов в массиве, а не выделенная под arr память
-	TimeDiagram::TimeDiagram(const Signal arr[], int size) {
+	TimeDiagram::TimeDiagram(const Signal arr[], const int size) {
 		if (size <= 0)
 			throw std::length_error("invalid length of signals array");
 		int temp_dur = 0;
@@ -87,7 +86,7 @@ namespace lab3 {
 
 
 	// конструктор ввода диаграммы в виде строки ASCII символов
-	TimeDiagram::TimeDiagram(std::string s) {
+	TimeDiagram::TimeDiagram(const std::string s) {
 		num_of_signals = 0;
 		int temp_duration = 0;
 
@@ -96,12 +95,6 @@ namespace lab3 {
 				this->erase();
 				throw std::invalid_argument("incorrect input!");
 			}
-			
-			// если в строке больше сигналов, чем выделено памяти, то обрезаем строку, исключение не выкидываем
-			/*if (temp_duration == max_duration) {
-				this->erase();
-				throw std::out_of_range("diagram max duration exceeded");
-			}  */
 			if (temp_duration == max_duration) return;
 
 			temp_duration++;
@@ -119,7 +112,7 @@ namespace lab3 {
 	//    #############         ГЕТТЕРЫ И СЕТТЕРЫ          #############
 
 
-	TimeDiagram& TimeDiagram::set_Signals(const Signal* arr, int size) {
+	TimeDiagram& TimeDiagram::set_Signals(const Signal* arr, const int size) {
 		if (size <= 0 || size > max_duration)
 			throw std::invalid_argument("invalid size of array");
 		// если количество сигналов больше, чем выделено памяти, то кидаю исключение
@@ -243,7 +236,7 @@ namespace lab3 {
 
 
 	// копирование диаграммы mult раз (если переполнение, то обрезается, исключения не выкидываются)
-	TimeDiagram& TimeDiagram::operator*=(int mult) {
+	TimeDiagram& TimeDiagram::operator*=(const int mult) {
 		if (mult < 1) throw std::invalid_argument("invalid multiplier");
 		// копируем исходное состояние this
 		TimeDiagram copy(*this);
@@ -254,7 +247,7 @@ namespace lab3 {
 
 
 	// замена диаграммы начиная с времени offset на другую диаграмму
-	TimeDiagram& TimeDiagram::operator()(const TimeDiagram& other, int offset) {
+	TimeDiagram& TimeDiagram::operator()(const TimeDiagram& other, const int offset) {
 		int temp_duration = this->get_Temp_Duration();
 		if (offset < 0 || offset > temp_duration)
 			throw std::invalid_argument("invalid offset");
@@ -279,7 +272,7 @@ namespace lab3 {
 
 	// сдвиг диаграммы на shift влево
 	// кусок длительностью shift слева просто исчезает, справа добавляются нули
-	TimeDiagram& TimeDiagram::operator<<=(int shift) {
+	TimeDiagram& TimeDiagram::operator<<=(const int shift) {
 		if (shift <= 0)
 			throw std::invalid_argument("shift must be bigger than zero");
 
@@ -313,7 +306,7 @@ namespace lab3 {
 
 	// сдвиг диаграммы на shift вправо
 	// как я поняла, образовавшееся пустое место слева надо просто заполнить нулями
-	TimeDiagram& TimeDiagram::operator>>=(int shift) {
+	TimeDiagram& TimeDiagram::operator>>=(const int shift) {
 		if (shift <= 0) throw std::invalid_argument("shift must be bigger than zero");
 		if (!num_of_signals) return *this;
 
