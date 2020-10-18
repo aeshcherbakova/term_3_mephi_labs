@@ -54,24 +54,35 @@ namespace lab3 {
 	// конструктор создания диаграммы с постоянным сигналом на всю длину
 	TimeDiagram::TimeDiagram(int state) {
 		try { signals[0] = Signal(state, max_duration); }
-		catch (std::exception& ex) { throw ex; }
-
+		catch (...) { throw; }
 		num_of_signals = 1;
 	}
 
 	// копирующий конструктор
 	TimeDiagram::TimeDiagram(const TimeDiagram& TD) noexcept{
 		num_of_signals = TD.num_of_signals;
-
 		for (int i = 0; i < num_of_signals; i++)
 			signals[i] = TD.signals[i];
 	}
 
 	
+	// конструктор с инициализацией готовым массивом сигналов
+	// здесь size - количество ненулевых сигналов в массиве, а не выделенная под arr память
 	TimeDiagram::TimeDiagram(const Signal arr[], int size) {
-		num_of_signals = size;
-		for (int i = 0; i < size; i++)
+		if (size <= 0)
+			throw std::length_error("invalid length of signals array");
+		int temp_dur = 0;
+		int i = 0;
+		for (; i < size && temp_dur < max_duration; i++) {
 			signals[i] = arr[i];
+			temp_dur += arr[i].duration;
+		}
+		
+		num_of_signals = i;
+		if (temp_dur > max_duration) {
+			num_of_signals--;
+			signals[num_of_signals].duration -= (temp_dur - max_duration);
+		}
 	}
 
 
@@ -190,7 +201,7 @@ namespace lab3 {
 		if (getline(istr, input).eof())
 			throw std::ios_base::failure("end of input");
 		try { td = TimeDiagram(input); }
-		catch (std::exception& ex) { throw ex; }
+		catch (...) { throw; }
 		return istr;
 	}
 
@@ -209,32 +220,35 @@ namespace lab3 {
 
 	// оператор сложения (новая диаграмма просто пририсовывается к первой справа, если переполнение, то обрезается)
 	TimeDiagram TimeDiagram::operator+(const TimeDiagram& other) const {
+		if (!num_of_signals) return other;
 		if (!other.get_Num_of_Signals()) return *this;
-		Signal sig_arr[max_duration];
+
+		Signal sig_arr[2*max_duration];
 		int i = 0, j = 0;
 		for (; i < num_of_signals; i++)
 			sig_arr[i] = signals[i];
 		// если на стыке одинаковые сигналы, сливаем их в один
-		if (i) i--;
 		const Signal* other_sig = other.get_Signals();
-		if (sig_arr[i].state == other_sig[0].state) {
-			sig_arr[i].duration += other_sig[0].duration;
+		if (sig_arr[i - 1].state == other_sig[0].state) {
+			sig_arr[i - 1].duration += other_sig[0].duration;
 			j = 1;
 		}
-		for (i++; j < other.num_of_signals; i++, j++)
+		for (; j < other.num_of_signals; i++, j++)
 			sig_arr[i] = other_sig[j];
 
 		// нам здесь не нужно считать длительность получившейся диаграммы, если она слишком большая, то будет обрезана в конструкторе
 		try { TimeDiagram res(sig_arr, i); return res; }
-		catch (std::exception& ex) { throw ex; }
+		catch (...) { throw; }
 	}
 
 
 	// копирование диаграммы mult раз (если переполнение, то обрезается, исключения не выкидываются)
 	TimeDiagram& TimeDiagram::operator*=(int mult) {
 		if (mult < 1) throw std::invalid_argument("invalid multiplier");
+		// копируем исходное состояние this
+		TimeDiagram copy(*this);
 		for (int cnt = 1; cnt < mult; cnt++)
-			*this = *this + *this;
+			*this = *this + copy;
 		return *this;
 	}
 
@@ -246,10 +260,11 @@ namespace lab3 {
 			throw std::invalid_argument("invalid offset");
 
 		int difference = temp_duration - offset;
-		for (int i = num_of_signals; i >= 0 && difference > 0; i--)
+		for (int i = num_of_signals - 1; i >= 0 && difference > 0; i--)
 			if (signals[i].duration <= difference) {
 				difference -= signals[i].duration;
 				signals[i] = Signal();
+				num_of_signals--;
 			}
 			else {
 				signals[i].duration -= difference;
@@ -322,8 +337,7 @@ namespace lab3 {
 			signals[i] = signals[i - 1];
 		num_of_signals++;
 
-		try { signals[0] = Signal(0, shift); }
-		catch (std::exception& ex) { throw ex; }
+		signals[0] = Signal(0, shift);
 
 		return *this;
 	}

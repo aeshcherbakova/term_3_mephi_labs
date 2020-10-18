@@ -24,7 +24,7 @@ namespace lab3 {
 	class TimeDiagram {
 
 	private:
-		static const int max_duration = 200;        // maximum sum duration of signals in diagram
+		static const int max_duration = 150;        // maximum sum duration of signals in diagram
 		int num_of_signals;                         // number of elements in signals array
 		Signal signals[max_duration];               // array of signals
 

@@ -8,7 +8,7 @@ int main() {
 	int choice;
 
 	while (choice = dialog())
-		if (!fptr[choice](td)) break;
+		if(!fptr[choice](td)) break;
 
 	std::cout << "That's all, bye! :)" << std::endl;
 	return 0;
