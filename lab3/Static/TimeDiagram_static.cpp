@@ -30,9 +30,6 @@ namespace lab3 {
 
 
 
-
-
-
 	//    #############         КОНСТРУКТОРЫ          #############
 
 	// очистка диаграммы (private) offset - начиная с какого номера элемента занулять массив
@@ -104,8 +101,6 @@ namespace lab3 {
 			else signals[num_of_signals++] = { ch - '0', 1 };
 		}
 	}
-
-
 
 
 
@@ -305,7 +300,7 @@ namespace lab3 {
 	
 
 	// сдвиг диаграммы на shift вправо
-	// как я поняла, образовавшееся пустое место слева надо просто заполнить нулями
+	// образовавшееся пустое место слева заполняется нулями
 	TimeDiagram& TimeDiagram::operator>>=(const int shift) {
 		if (shift <= 0) throw std::invalid_argument("shift must be bigger than zero");
 		if (!num_of_signals) return *this;

@@ -58,5 +58,4 @@ namespace lab3 {
 		TimeDiagram& operator<<=(const int shift);
 		TimeDiagram& operator>>=(const int shift);
 	};
-
 }
