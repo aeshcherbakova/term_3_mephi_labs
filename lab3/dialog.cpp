@@ -30,6 +30,7 @@ namespace lab3 {
 		return input;
 	}
 
+
 	int set_new_td(TimeDiagram& td) {
 		std::cout << "Input sequence of signals to initialize your time diagram: " << std::endl;
 		try {	
@@ -129,5 +130,4 @@ namespace lab3 {
 		}
 		return 1;
 	}
-
 }
