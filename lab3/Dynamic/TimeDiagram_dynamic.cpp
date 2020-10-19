@@ -143,10 +143,8 @@ namespace lab3 {
 		}
 		for (int j = 0; j < num_of_signals; j++)
 			signals[j] = arr[j];
-		if (temp_dur > max_duration) {
-			num_of_signals--;
-			signals[num_of_signals].duration -= (temp_dur - max_duration);
-		}
+		if (temp_dur > max_duration) 
+			signals[num_of_signals - 1].duration -= (temp_dur - max_duration);
 		return *this;
 	}
 

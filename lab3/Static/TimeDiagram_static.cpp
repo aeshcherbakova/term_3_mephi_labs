@@ -106,7 +106,7 @@ namespace lab3 {
 
 		num_of_signals = i;
 		if (temp_dur > max_duration)
-			signals[num_of_signals].duration -= (temp_dur - max_duration);
+			signals[num_of_signals - 1].duration -= (temp_dur - max_duration);
 		return *this;
 	}
 
