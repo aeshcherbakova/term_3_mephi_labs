@@ -146,6 +146,11 @@
   <ItemGroup>
     <ClInclude Include="dialog.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Static\Static.vcxproj">
+      <Project>{c1dbbd85-4b7c-40da-a43b-60d0126569ca}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

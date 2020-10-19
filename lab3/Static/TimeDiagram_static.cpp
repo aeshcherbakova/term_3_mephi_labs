@@ -61,26 +61,11 @@ namespace lab3 {
 			signals[i] = TD.signals[i];
 	}
 
-	
 	// конструктор с инициализацией готовым массивом сигналов
 	// здесь size - количество ненулевых сигналов в массиве, а не выделенная под arr память
 	TimeDiagram::TimeDiagram(const Signal arr[], const int size) {
-		if (size <= 0)
-			throw std::length_error("invalid length of signals array");
-		int temp_dur = 0;
-		int i = 0;
-		for (; i < size && temp_dur < max_duration; i++) {
-			signals[i] = arr[i];
-			temp_dur += arr[i].duration;
-		}
-		
-		num_of_signals = i;
-		if (temp_dur > max_duration) {
-			num_of_signals--;
-			signals[num_of_signals].duration -= (temp_dur - max_duration);
-		}
+		this->set_Signals(arr, size);
 	}
-
 
 	// конструктор ввода диаграммы в виде строки ASCII символов
 	TimeDiagram::TimeDiagram(const std::string s) {
@@ -108,18 +93,18 @@ namespace lab3 {
 
 
 	TimeDiagram& TimeDiagram::set_Signals(const Signal* arr, const int size) {
-		if (size <= 0 || size > max_duration)
-			throw std::invalid_argument("invalid size of array");
-		// если количество сигналов больше, чем выделено памяти, то кидаю исключение
-		// если длительность переданного массива больше, чем выделено в диаграмме, то не выкидываю исключение, а просто обрезаю массив
+		if (size <= 0)
+			throw std::length_error("invalid length of signals array");
+		int temp_dur = 0;
 		int i = 0;
-		int temp_duration = 0;
-		for (; temp_duration < max_duration && i < size; i++) {
-			// предполагается, что в качестве аргумента передан правильный массив, тогда при присваивании try-catch не нужен
+		for (; i < size && temp_dur < max_duration; i++) {
 			signals[i] = arr[i];
-			temp_duration += signals[i].duration;
+			temp_dur += arr[i].duration;
 		}
+
 		num_of_signals = i;
+		if (temp_dur > max_duration)
+			signals[num_of_signals - 1].duration -= (temp_dur - max_duration);
 		return *this;
 	}
 
