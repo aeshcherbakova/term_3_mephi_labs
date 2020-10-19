@@ -3,6 +3,7 @@
 #include <iostream>
 #include <limits>
 #include "Static\TimeDiagram_static.h"
+//#incluse "Dinamic\TimeDiagram_dinamic.h"
 
 namespace lab3 {
 

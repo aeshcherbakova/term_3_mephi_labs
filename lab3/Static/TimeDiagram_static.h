@@ -21,6 +21,7 @@ namespace lab3 {
 	};
 
 
+
 	class TimeDiagram {
 
 	private:

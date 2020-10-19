@@ -3,6 +3,7 @@
 
 using namespace lab3;
 
+
 int main() {
 	TimeDiagram td;
 	int choice;

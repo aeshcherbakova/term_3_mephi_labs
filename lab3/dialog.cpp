@@ -12,6 +12,7 @@ namespace lab3 {
 		"6. Shift right"
 	};
 
+
 	const int NMsgs = sizeof(menu) / sizeof(menu[0]);
 
 	int (*fptr[])(TimeDiagram&) = { NULL, set_new_td, add_signals, multiplicate, insert_new, shift_left, shift_right };
