@@ -18,6 +18,9 @@ namespace lab3 {
 
 		Signal& operator=(const Signal& other) noexcept;   // assignmet operator
 		Signal& operator ++();
+		friend bool operator==(const Signal& a, const Signal& b) {
+			return (a.state == b.state && a.duration == b.duration);
+		}
 	};
 
 
@@ -37,13 +40,13 @@ namespace lab3 {
 		// constructors
 		TimeDiagram() noexcept;                              // default constructor
 		TimeDiagram(const int state);                        // constant signal
-		TimeDiagram(const Signal arr[], const int size);     // initializing with arra
+		TimeDiagram(const Signal* arr, const int size);     // initializing with arra
 		TimeDiagram(const TimeDiagram& TD) noexcept;         // copy constructor
 		TimeDiagram(TimeDiagram&& TD) noexcept;
 		TimeDiagram(const std::string s);                    // ASCII-string
 
 
-		~TimeDiagram() { if (num_of_signals) delete[] signals; }        // destructor
+		~TimeDiagram() { if (signals) delete[] signals; }        // destructor
 
 		// setters & getters
 		TimeDiagram& set_Signals(const Signal* arr, int length);

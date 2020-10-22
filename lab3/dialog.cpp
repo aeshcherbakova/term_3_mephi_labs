@@ -74,7 +74,7 @@ namespace lab3 {
 			td *= k; 
 			std::cout << td << std::endl;
 		}
-		catch (std::invalid_argument& ex) {
+		catch (std::exception& ex) {
 			std::cout << "Error: " << ex.what() << std::endl;
 		}
 		return 1;
@@ -99,7 +99,7 @@ namespace lab3 {
 			td(to_add, k);
 			std::cout << td << std::endl;
 		}
-		catch (std::invalid_argument& ex) {
+		catch (std::exception& ex) {
 			std::cout << "Error: " << ex.what() << std::endl;
 		}
 
@@ -113,7 +113,7 @@ namespace lab3 {
 			td <<= k; 
 			std::cout << td << std::endl; 
 		}
-		catch (std::invalid_argument& ex) {
+		catch (std::exception& ex) {
 			std::cout << "Error: " << ex.what() << std::endl;
 		}
 		return 1;
@@ -126,7 +126,7 @@ namespace lab3 {
 			td >>= k;
 			std::cout << td << std::endl;
 		}
-		catch (std::invalid_argument& ex) {
+		catch (std::exception& ex) {
 			std::cout << "Error: " << ex.what() << std::endl;
 		}
 		return 1;

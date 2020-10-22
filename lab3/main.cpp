@@ -1,5 +1,4 @@
 #include "dialog.h"
-#include "Static/TimeDiagram_static.h"
 
 using namespace lab3;
 

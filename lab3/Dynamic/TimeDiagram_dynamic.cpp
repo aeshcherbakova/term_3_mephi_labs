@@ -89,7 +89,7 @@ namespace lab3 {
 
 	// конструктор с инициализацией готовым массивом сигналов
 	// здесь size - количество ненулевых сигналов в массиве, а не выделенная под arr память
-	TimeDiagram::TimeDiagram(const Signal arr[], const int size) {
+	TimeDiagram::TimeDiagram(const Signal* arr, const int size) {
 		this->set_Signals(arr, size);
 	}
 
@@ -108,7 +108,12 @@ namespace lab3 {
 				num_of_signals = size_of_array = 0;
 				throw std::invalid_argument("incorrect input!");
 			}
-			if (temp_duration == max_duration) return;
+			if (temp_duration == max_duration) {
+				delete[] signals;
+				signals = nullptr;
+				num_of_signals = size_of_array = 0;
+				throw std::length_error("maximum duration exceeded!");
+			}
 
 			temp_duration++;
 			if (ch == 'X') ch = '2';
@@ -131,8 +136,11 @@ namespace lab3 {
 		int temp_dur = 0;
 		int i = 0;
 		// считаем, сколько памяти надо выделить
-		for (; i < size && temp_dur < max_duration; i++)
+		for (; i < size; i++)
 			temp_dur += arr[i].duration;
+
+		if (temp_dur > max_duration)
+			throw std::length_error("maximum duration exceeded!");
 
 		num_of_signals = i;
 		// если в уже созданной диаграмме памяти выделено меньше, то удаляем и выделяем заново
@@ -213,8 +221,7 @@ namespace lab3 {
 		std::string input;
 		if (getline(istr, input).eof())
 			throw std::ios_base::failure("end of input");
-		try { td = TimeDiagram(input); }
-		catch (...) { throw; }
+		td = TimeDiagram(input);
 		return istr;
 	}
 
@@ -233,7 +240,7 @@ namespace lab3 {
 	}
 
 
-	// оператор сложения (новая диаграмма просто пририсовывается к первой справа, если переполнение, то обрезается)
+	// оператор сложения (новая диаграмма просто пририсовывается к первой справа, если переполнение, то кидаю исключение)
 	TimeDiagram TimeDiagram::operator+(const TimeDiagram& other) const {
 		if (!num_of_signals) return other;
 		if (!other.get_Num_of_Signals()) return *this;
@@ -251,9 +258,9 @@ namespace lab3 {
 		for (; j < other.num_of_signals; i++, j++)
 			sig_arr[i] = other_sig[j];
 
-		// нам здесь не нужно считать длительность получившейся диаграммы, если она слишком большая, то будет обрезана в конструкторе
-		try { TimeDiagram res(sig_arr, i); return res; }
-		catch (...) { throw; }
+		// нам здесь не нужно считать длительность получившейся диаграммы, если она слишком большая, то будет выкинуто исключение из конструктора
+		TimeDiagram res(sig_arr, i); 
+		return res;
 	}
 
 
@@ -273,6 +280,8 @@ namespace lab3 {
 		int temp_duration = this->get_Temp_Duration();
 		if (offset < 0 || offset > temp_duration)
 			throw std::invalid_argument("invalid offset");
+		if (other.get_Temp_Duration() + offset > max_duration)
+			throw std::length_error("maximum duration exceeded!");
 
 		// обрезаем исходную диаграмму до длительности offset
 		int difference = temp_duration - offset;
@@ -294,7 +303,7 @@ namespace lab3 {
 
 
 	// сдвиг диаграммы на shift влево
-	// кусок длительностью shift слева просто исчезает, справа добавляются нули
+	// кусок длительностью shift слева просто исчезает
 	TimeDiagram& TimeDiagram::operator<<=(const int shift) {
 		if (shift <= 0)
 			throw std::invalid_argument("shift must be bigger than zero");
@@ -328,7 +337,7 @@ namespace lab3 {
 
 
 	// сдвиг диаграммы на shift вправо
-	// как я поняла, образовавшееся пустое место слева надо просто заполнить нулями
+	// как я поняла, образовавшееся пустое место слева надо просто заполнить неопределенным сигналом
 	TimeDiagram& TimeDiagram::operator>>=(const int shift) {
 		if (shift <= 0) throw std::invalid_argument("shift must be bigger than zero");
 		if (!num_of_signals) return *this;
@@ -354,7 +363,7 @@ namespace lab3 {
 			signals[i] = signals[i - 1];
 		num_of_signals++;
 
-		signals[0] = Signal(0, shift);
+		signals[0] = Signal(X, shift);
 
 		return *this;
 	}

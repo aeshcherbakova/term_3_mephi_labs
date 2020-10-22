@@ -55,6 +55,7 @@ namespace lab3 {
 		TimeDiagram& operator*=(const int mult);
 		TimeDiagram& operator()(const TimeDiagram& other, const int offset);
 
+
 		// shifts to left/right
 		TimeDiagram& operator<<=(const int shift);
 		TimeDiagram& operator>>=(const int shift);

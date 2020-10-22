@@ -49,8 +49,7 @@ namespace lab3 {
 
 	// конструктор создания диаграммы с постоянным сигналом на всю длину
 	TimeDiagram::TimeDiagram(const int state) {
-		try { signals[0] = Signal(state, max_duration); }
-		catch (...) { throw; }
+		signals[0] = Signal(state, max_duration);
 		num_of_signals = 1;
 	}
 
@@ -175,8 +174,7 @@ namespace lab3 {
 		std::string input;
 		if (getline(istr, input).eof())
 			throw std::ios_base::failure("end of input");
-		try { td = TimeDiagram(input); }
-		catch (...) { throw; }
+		td = TimeDiagram(input);
 		return istr;
 	}
 
@@ -212,8 +210,8 @@ namespace lab3 {
 			sig_arr[i] = other_sig[j];
 
 		// нам здесь не нужно считать длительность получившейся диаграммы, если она слишком большая, то будет обрезана в конструкторе
-		try { TimeDiagram res(sig_arr, i); return res; }
-		catch (...) { throw; }
+		TimeDiagram res(sig_arr, i); 
+		return res;
 	}
 
 
@@ -287,7 +285,7 @@ namespace lab3 {
 	
 
 	// сдвиг диаграммы на shift вправо
-	// образовавшееся пустое место слева заполняется нулями
+	// образовавшееся пустое место слева заполняется неопределенным сигналом
 	TimeDiagram& TimeDiagram::operator>>=(const int shift) {
 		if (shift <= 0) throw std::invalid_argument("shift must be bigger than zero");
 		if (!num_of_signals) return *this;
@@ -312,7 +310,7 @@ namespace lab3 {
 			signals[i] = signals[i - 1];
 		num_of_signals++;
 
-		signals[0] = Signal(0, shift);
+		signals[0] = Signal(X, shift);
 
 		return *this;
 	}
