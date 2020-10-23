@@ -142,17 +142,18 @@ namespace lab3 {
 		if (temp_dur > max_duration)
 			throw std::length_error("maximum duration exceeded!");
 
-		num_of_signals = i;
 		// если в уже созданной диаграмме памяти выделено меньше, то удаляем и выделяем заново
-		if (size_of_array < i) {
+		if (size_of_array < size) {
 			delete[] signals;
-			size_of_array = i;
+			size_of_array = size;
 			signals = new Signal[size_of_array];
 		}
-		for (int j = 0; j < num_of_signals; j++)
-			signals[j] = arr[j];
-		if (temp_dur > max_duration) 
-			signals[num_of_signals - 1].duration -= (temp_dur - max_duration);
+		num_of_signals = 0;
+		for (int j = 0; j < size; j++)
+			if (num_of_signals && signals[j - 1].state == arr[j].state)
+				signals[num_of_signals - 1].duration += arr[j].duration;
+			else
+				signals[num_of_signals++] = arr[j];
 		return *this;
 	}
 

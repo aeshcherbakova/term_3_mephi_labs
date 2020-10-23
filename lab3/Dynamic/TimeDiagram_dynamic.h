@@ -40,7 +40,7 @@ namespace lab3 {
 		// constructors
 		TimeDiagram() noexcept;                              // default constructor
 		TimeDiagram(const int state);                        // constant signal
-		TimeDiagram(const Signal* arr, const int size);     // initializing with arra
+		TimeDiagram(const Signal* arr, const int size);      // initializing with array
 		TimeDiagram(const TimeDiagram& TD) noexcept;         // copy constructor
 		TimeDiagram(TimeDiagram&& TD) noexcept;
 		TimeDiagram(const std::string s);                    // ASCII-string
