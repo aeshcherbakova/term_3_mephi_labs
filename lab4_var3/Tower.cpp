@@ -8,7 +8,7 @@ namespace Tower_Defence{
 		m_table(info),
 		m_cooldown(info[0].speed){};
 
-	void Tower::turn(Landscape& land, std::stringstream& ss) {
+	void Tower::turn(Landscape& land, std::stringstream& ss) noexcept{
 		if (--m_cooldown == 0) {
 			for (std::list<Enemy*>::const_iterator it = land.getEnemies().begin(); it != land.getEnemies().end(); it++)
 				if (land.distance(getCoord(), (*it)->getCoord()) <= m_table[m_level].radius) {
