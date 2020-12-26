@@ -16,16 +16,17 @@ namespace Tower_Defence {
 	private:
 		int m_level;                             // Current level of the tower
 		float m_cooldown;                        // How many moves left before next shot
-		std::vector<Tower_Level_Info>& m_table;  // Table with initial params of towers of all levels (uploaded from config file)
+		std::vector<Tower_Level_Info>* m_table;  // Table with initial params of towers of all levels (uploaded from config file)
 
 	public:
+		Tower(): Building(0), m_level(0), m_cooldown(0), m_table(nullptr) {};
 		Tower(int coord, std::vector<Tower_Level_Info>& info);
 		~Tower() {};
 
 		/*! Getter of the current level of the tower. */
 		int getLevel() const noexcept { return m_level; }
 		/*! Getter of table with initial params */
-		const std::vector<Tower_Level_Info>& getInfo() const noexcept { return m_table; }
+		const std::vector<Tower_Level_Info>* getInfo() const noexcept { return m_table; }
 		/*!
 		Shooting an enemy. If cooldown = 0, the tower damages the first enemy in an enemy array, which is within the firing radius. 
 		\param land Map of the game, that includes coordinates of all enemies on map.

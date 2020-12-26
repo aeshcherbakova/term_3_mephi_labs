@@ -139,7 +139,7 @@ namespace Tower_Defence {
 
 	int level_up_tower(Landscape& land) {
 		// пробегаемся по массиву башен, подсвечиваем каждую по очереди, выводим инфу и спрашиваем, если можно ее апгрейднуть
-		for (std::vector<Tower>::const_iterator it = land.getTowers().begin(); it != land.getTowers().end(); it++) {
+		for (mvector<Tower>::ConstIterator it = land.getTowers().cbegin(); it != land.getTowers().cend(); it++) {
 			clear();
 			print_map_in_console(land, it->getCoord());  // выводим карту заново, подсвечивая эту башню
 			std::cout << "Tower info: level: " << it->getLevel() << std::endl;

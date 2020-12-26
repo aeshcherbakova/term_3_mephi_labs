@@ -291,7 +291,7 @@ namespace Tower_Defence {
 
         // прошли по всей карте, если какое-то из логов не досягаемо, кидаем исключение
         // если логова в досягаемости, но игрок загнал пехоту в ловушку, это праивилами не запрещается :)
-        for (std::vector<Den>::const_iterator it = m_dens.begin(); it != m_dens.end(); it++)
+        for (mvector<Den>::ConstIterator it = m_dens.cbegin(); it != m_dens.cend(); it++)
             if (!it->is_empty() && m_map[it->getCoord()].light_dist == INF)
                 throw std::logic_error("Error! No way for light infantry!");
     }
@@ -353,7 +353,7 @@ namespace Tower_Defence {
 
 
     bool Landscape::check_dens_empty() const noexcept {
-        for (std::vector<Den>::const_iterator it = m_dens.begin(); it != m_dens.end(); it++)
+        for (mvector<Den>::ConstIterator it = m_dens.cbegin(); it != m_dens.cend(); it++)
             if (!it->is_empty()) return false;
         return true;
     }
@@ -411,7 +411,7 @@ namespace Tower_Defence {
             throw std::invalid_argument("This is not a tower :(");
          
         // находим ту самую башню
-        for (std::vector<Tower>::iterator it = m_towers.begin(); it != m_towers.end(); it++)
+        for (mvector<Tower>::Iterator it = m_towers.begin(); it != m_towers.end(); it++)
             if (it->getCoord() == coord) {
                 m_castle->buy_anything(it->level_up());
                 return;
@@ -467,8 +467,8 @@ namespace Tower_Defence {
         }
 
         // потом пробегаемся по массиву башен, тк они могут быть разных уровней, а в классе Cell уровень башни не хранится
-        for (auto tower : m_towers)
-            field[tower.getCoord()] = { tower.getLevel() + '0', Color::Yellow };
+        for (mvector<Tower>::ConstIterator it = m_towers.cbegin(); it != m_towers.cend(); it++)
+            field[it->getCoord()] = { it->getLevel() + '0', Color::Yellow };
         
        
         for (int i = 0; i < size; i++)
@@ -513,7 +513,7 @@ namespace Tower_Defence {
 
 
         // логова выпускают врагов
-        for (std::vector<Den>::iterator it = m_dens.begin(); it != m_dens.end(); it++)
+        for (mvector<Den>::Iterator it = m_dens.begin(); it != m_dens.end(); it++)
             if (!it->is_empty())
                 it->turn(*this, ss);
 
@@ -545,7 +545,7 @@ namespace Tower_Defence {
 
 
         // башни стреляют
-        for (std::vector<Tower>::iterator it = m_towers.begin(); it != m_towers.end(); it++)
+        for (mvector<Tower>::Iterator it = m_towers.begin(); it != m_towers.end(); it++)
             it->turn(*this, ss);
 
 

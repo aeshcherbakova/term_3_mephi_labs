@@ -52,12 +52,12 @@ namespace Tower_Defence {
 		int m_time;              // кол-во единиц времени (ходов), прошедшее с начала игры
 		int m_width, m_height;
 		Castle* m_castle;
-		std::vector<Cell> m_map;    // двумерная матрица "схлопнулась" в одномерный массив
+		mvector<Cell> m_map;     // двумерная матрица "схлопнулась" в одномерный массив 
 
 		Config* m_config;  // вся статическая инфа
 
-		std::vector<Tower> m_towers;
-		std::vector<Den>   m_dens;
+		mvector<Tower> m_towers;
+		mvector<Den>   m_dens;
 		std::list<Wall>    m_walls;
 		std::list<Enemy*>  m_enemies; 
 	
@@ -70,8 +70,8 @@ namespace Tower_Defence {
 		int getMoney()  const noexcept { return m_castle->getMoney(); }
 		int getTime()   const noexcept { return m_time; }
 		const Castle*             getCastle() const noexcept { return m_castle; }
-		const std::vector<Cell>&  getMap()    const noexcept { return m_map; }
-		const std::vector<Tower>& getTowers() const noexcept { return m_towers; }
+		const mvector<Cell>&  getMap()    const noexcept { return m_map; }
+		const mvector<Tower>& getTowers() const noexcept { return m_towers; }
 		const std::list<Wall>&    getWalls()  const noexcept { return m_walls; }
 		const std::list<Enemy*>& getEnemies() const noexcept { return m_enemies; }
 		int getDistLight(int coord) const noexcept { return m_map[coord].light_dist; }
@@ -112,7 +112,6 @@ namespace Tower_Defence {
 		
 		void wall_receive_damage(int coord, float damage, std::stringstream& ss);
 		void castle_receive_damage(float damage, std::stringstream&);
-		void shoot_hero (Enemy*, float damage, std::stringstream&);
 		void shoot_enemy(Enemy*, float damage, std::stringstream&);
 
 

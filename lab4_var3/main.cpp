@@ -7,7 +7,6 @@ int main() {
 	// надо сделать сначала выбор уровня, отдельный конфиг, где будет лежать кол-во уровней и сколько игрок уже прошел
 
 	int choice;
-
 	while (true) {
 		choice = dialog(land);
 		if (!fptr[choice](land)) break;
