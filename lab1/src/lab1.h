@@ -3,45 +3,38 @@
 
 namespace lab1 {
 
-
-	// структура для хранения положения и значения каждого ненулевого элемента
+	// struct for storing non-zero item place and value
 	typedef struct NotZeroItem {
-		int row, column;    // номер строки и столбца ненулевого элемента матрицы
-		double value;       // значение ненулевых элементов матрицы
+		int row, column;    
+		double value;       
 	}NZItem;
 
 
-
-	// структура сильно разреженной матрицы
 	 typedef struct Sparse_Matrix {
-		int m, n;           // кол-во строк и столбцов матрицы
-		int NZ_items;       // кол-во ненулевых элементов
-		NZItem* items;      // массив ненулевых элементов
+		int m, n;           // num of rows and columns in matrix
+		int NZ_items;       // num of non-zero items
+		NZItem* items;      // array of non-zero items
 	}Matrix;
 
 
-
-	// шаблон функций ввода одного значения произвольного типа
+	// template for inpup one value of any type
 	template <class T>
 	int getNum(T& a) {
 		std::cin >> a;
-		if (!std::cin.good()) {   // обнаружена ошибка ввода или конец файла
+		if (!std::cin.good()) {   // input error or end of file
 			std::cin.clear();
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		}
-		//	return -1;
 		return 1;
 	}
 
 
 
-	// шаблон функции изменения размера динамического массива
+	// template for changing dynamic array's length
 	template <class T>
 	T* resize_array(T* arr, int old_size, int new_size) {
-		// если исходный массив пустой, сразу выходим
 		if (!arr) return nullptr;
 
-		// создаем новый массив 
 		T* new_array = nullptr;
 		try {
 			new_array = new T[new_size];
@@ -51,15 +44,14 @@ namespace lab1 {
 			return nullptr;
 		}
 
-		// копирование данных из старого массива в новый
 		for (int i = 0; i < old_size; i++)
 			new_array[i] = arr[i];
-		delete[] arr;     // удаление старого массива
+		delete[] arr;    
 		return new_array;
 	}
 
 
-	// шаблон функции перемены мест двух переменных
+	// template for swapping values of any type
 	template <class T>
 	void swap(T& a, T& b) {
 		T x = a;
@@ -68,7 +60,7 @@ namespace lab1 {
 	}
 
 
-	// поменять местами элемент массива с предыдущим
+	// swap item in array with its previous item
 	inline NZItem* swap_left(NZItem* temp) {
 		NZItem a = *temp;
 		*temp = *(temp - 1);
@@ -77,7 +69,7 @@ namespace lab1 {
 	}
 
 
-	// прототипы функций
+	// function prorotypes
 	bool input_size(const char * msg, int &dest);
 	NZItem* new_array(NZItem*& arr, int size);
 	Matrix* input();

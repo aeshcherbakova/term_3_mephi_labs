@@ -7,10 +7,10 @@ namespace lab1 {
 	const int MAX_INT = std::numeric_limits<int>::max();
 
 
-	// функция ввода размеров матрицы с выводом сообщений об ошибке
-	// 1 - выполнено успешно, 0 - ошибка
+	// input number of rows and columns in matrix + ouput error message
+	// 1 - success, 0 - error
 	bool input_size(const char* msg, int& dest) {
-		const char* pr = "";    // будущее сообщение об ошибке
+		const char* pr = "";    // future error message
 		do {
 			std::cout << pr << std::endl << msg;
 			pr = "You are wrong. Repeat, please!";
@@ -24,8 +24,7 @@ namespace lab1 {
 	}
 
 
-
-	// функция создания массива ненулей размера size
+	// creating new array of non-zero items 
 	NZItem* new_array(NZItem*& arr, int size) {
 		try {
 			arr = new NZItem[size];
@@ -39,11 +38,11 @@ namespace lab1 {
 
 
 
-	// функция ввода прямоугольной разреженной матрицы
+	// input of rectangular sparse matrix
 	Matrix* input() {
 		Matrix* matr = new Matrix({ 0, 0, 0, nullptr });
 
-		// сначала вводятся размеры прямоугольной матрицы
+		// input num of rows and cols
 		input_size("Enter number of rows in matrix ---> ", matr->m);
 		input_size("Enter number of columns in matrix ---> ", matr->n);
 
@@ -68,7 +67,7 @@ namespace lab1 {
 
 
 
-	// функция освобождения занятой памяти
+	// free allocated memory of matrix
 	void erase(Matrix *matr) {
 		delete[] matr->items;
 		delete matr;
@@ -76,10 +75,10 @@ namespace lab1 {
 
 
 
-	// функция вывода в консоль матрицы
+	// outuput matrix into console
 	void output(const char* msg, Matrix* matr) {
 		std::cout << std::endl << msg << std::endl;
-		// std::cout.setf(std::ios::fixed);    // вывод строго в десятичном формате (выглядит неровно, тк нули остаются нулями, без знаков после запятой)
+		// std::cout.setf(std::ios::fixed);    // output in decimal format 
 		int count = 0;
 		for (int i = 0; i < matr->m; ++i) {
 			for (int j = 0; j < matr->n; ++j)
@@ -93,14 +92,13 @@ namespace lab1 {
 	}
 
 
-
-	// функия выделения памяти и ввода матрицы для варианта ввода полностью вручную
-	// возвращет 1, если все удачно, и 0, если не хватает памяти / проблема со вводом
-	// если проблема с пямятью, матрица из функции выходит уже очищенная
+	// allocating memory and inputting matrix for manual input
+	// returns 1 - success, 0 - alloc error or input error
+	// if memory error, marix is erased
 	int input_all_matrix(Matrix* matr) {
-		// сначала выделяем память под 20% или 50% от кол-ва элементов
+		// allocate momry for 20% or 50% of number of elements 
 		int size = 0;
-		// если человеку приспичило сделать матрицу больше, чем вмещает инт
+		// if user wants matrix bigger then max_int
 
 		if (matr->n > MAX_INT / matr->m) size = 1000000;
 		else {
@@ -108,7 +106,7 @@ namespace lab1 {
 			size = (full_size > 100) ? (full_size / 10) : (full_size / 2 + 1);
 		}
 		do {
-			// выделяем память под массив, если неудача, уменьшаем количество элементов в 2 раза
+			// allocate memoty for array; divide size by 2 if error
 			if (!new_array(matr->items, size)) size /= 2;
 		} while (!matr->items && size > 1);
 
@@ -122,13 +120,13 @@ namespace lab1 {
 		for (int i = 0; i < matr->m; i++) {
 			std::cout << "Enter items for matrix line #" << (i + 1) << ":" << std::endl;
 			for (int j = 0; j < matr->n; j++) {
-				if (getNum(temp) < 0) {   // проблема с вводом числа
+				if (getNum(temp) < 0) {   // input error
 					erase(matr);
 					return 0;
 				}
-				// записываем только ненули
+				// write only non-zero items
 				if (temp != 0) {
-					// расширитель памяти, если изначально выделили недостаточно
+					// add memory if not enough
 					if (matr->NZ_items == size) {
 						int add_items = 5;
 						NZItem* new_arr = nullptr;
@@ -136,7 +134,7 @@ namespace lab1 {
 							new_arr = resize_array(matr->items, size, size + add_items--);
 						} while (!new_arr && add_items > 0);
 						if (!new_arr) {
-							// не выделилась память даже под один элемент, завершение
+							// memory not allocated even for 1 item - erase, return error
 							std::cout << "Too many items :(" << std::endl;
 							erase(matr);
 							return 0;
@@ -145,7 +143,7 @@ namespace lab1 {
 						size += add_items + 1;
 					}
 
-					// память успешно выделилась, вставляем новый ненулевой элемент
+					// memory allocated successfully, add new non-zero item
 					matr->items[matr->NZ_items] = { i, j, temp };
 					matr->NZ_items++;
 				}
@@ -156,33 +154,32 @@ namespace lab1 {
 	}
 
 
-
-	// функция для ввода матрицы в формате (row, column, value) только ненулей
-	// возвращает 1, если все удачно, и 0, если не хватает памяти / проблема со вводом
+	// input matrix in format (row, column, value) of non-zeros
+	// return 1 - success, 0 - memory/input error
 	int input_only_not_zeros(Matrix* matr) {
 		std::cout << "Input number of not zero items --> ";
-		const char* pr = "";    // будущее сообщение об ошибке
+		const char* pr = "";    // future error message
 		do {
 			std::cout << pr << std::endl;
 			pr = "Number of not zero items must be bigger than 0";
 			if (getNum(matr->NZ_items) < 0) return 0;
 		} while (matr->NZ_items <= 0);
 
-		// если человеку приспичит впихнуть 1000 элементов в матрицу 5*5
+		// check num of non-zeros smaller then matrix size
 		if (matr->NZ_items > matr->m * matr->n) matr->NZ_items = matr->m * matr->n;
-		if(!new_array(matr->items, matr->NZ_items)) return 0;     // выделение памяти
+		if(!new_array(matr->items, matr->NZ_items)) return 0;     // memory alloc
 
-		// ввод самих чисел
+		// input non-zeros
 		for (int i = 0; i < matr->NZ_items; i++) {
 			std::cout << "Input row, column and value of not zero item #" << i + 1 << " --> ";
 			NZItem* temp = matr->items + i;
 			if (getNum(temp->row) < 0 || getNum(temp->column) < 0 || getNum(temp->value) < 0) {
-				// проблема с вводом числа
+				// input error
 				erase(matr);
 				return 0;
 			}
 
-			// проверки на случай, если пользователь тупой
+			// check indices in bounds
 			if (temp->row < 0 || temp->row > matr->m - 1) {
 				std::cout << "Row of item must be >= 0 and < number of rows in matrix!" << std::endl;
 				i--;
@@ -199,7 +196,7 @@ namespace lab1 {
 				continue;
 			}
 
-			// сортировка вставками (сначала сдвигаем до нужного ряда)
+			// input sorting
 			while (temp > matr->items && temp->row < (temp - 1)->row) {
 				temp = swap_left(temp);
 			}
@@ -212,55 +209,54 @@ namespace lab1 {
 
 
 
-	// функция создания новой матрицы:
-	// поменяв в каждой строке местами i-ый и j-ый элементы, где i – индекс первого элемента строки матрицы, превышающего предыдущий, 
-	// а j – индекс последнего элемента строки матрицы, меньшего, чем предыдущий.
+	// creating new matrix:
+	// swap i and j elements, where i - index of first element in row, bigger its previous
+	// j - index of last element in row, smaller its previuos
 	Matrix* change_items_in_matrix(Matrix* matr) {
 
-		// создаем каркас новой матрицы, следим, чтобы память не кончилась
+		// create frame for new matrix, check memory is enough
 		Matrix* new_matr = new Matrix({ matr->m, matr->n, matr->NZ_items, nullptr });
 		if(!new_array(new_matr->items, new_matr->NZ_items)) return nullptr;
 
-		// собственно, основной алгоритм
-		// результатом выполнения будут 2 числа - I и J номера столбцов, а также 2 указателя
-		// указатели на эти ячейки, которые надо поменять местами. Если ноль, то указатель пустой, если не ноль, то указатель рабочий
+		// main alorithm
+		// result - i and j indices of columns + 2 pointers on elements to swap. If index = 0, pointer is null
 		int I = -1, J = -1;
 		NZItem* I_ptr = nullptr, * J_ptr = nullptr;
 		NZItem* new_matr_ptr = new_matr->items;
-		NZItem* ptr = matr->items;            // указатель, который будет бегать по массиву 
-		int start_line_offset = 0;   // сдвиг указателя относительно начала массива (первый неноль в данной строке)
-		int end_line_offset = 0;     // сдвиг указателя относительно начала массива (последний неноль в данной строке)
+		NZItem* ptr = matr->items;            // iterator
+		int start_line_offset = 0;   // shift of pointer (first non-zero in this row)
+		int end_line_offset = 0;     // shift of pointer (last non-zero in this row)
 
 		for (int i = 0; i < matr->m; ++i) {
-			// если рассмотрели уже все ненули, а матрица не кончилась, завершаем цикл
+			// if all non-zero checked, end loop 
 			if (start_line_offset == matr->NZ_items) break;
 			ptr = matr->items + start_line_offset;
-			if (ptr->row != i) continue;     // если в данной строке нет ненулей, переходим на следующую
+			if (ptr->row != i) continue;     // if there no non-zero items, go to next row
 			new_matr_ptr = new_matr->items + start_line_offset;
 
-			// на этом моменте можем быть уверенными, что в строке есть ненулевой элемент
+			// we are sure that non-zero in this row exists
 			I_ptr = find_I_item_in_a_row(matr, ptr, i, I);
 
-			// переводим указатель на первый в следующей строке неноль
+			// go to first non-zero in next row
 			while (ptr < matr->items + matr->NZ_items - 1 && (ptr + 1)->row == i) ptr++;
-			end_line_offset = ptr - matr->items;    // Запоминаем номер последнего ненуля в данной строке
-			// теперь ptr указывает на последний неноль в строке, мы готовы искать J
+			end_line_offset = ptr - matr->items;    // remember index of last non-zero in this row
+			// ptr points on last non-zero in this line; we are ready to find J
 
 			J_ptr = find_J_item_in_a_row(matr, ptr, i, J);
 
 			//std::cout << std::endl << "row = " << i << " I = " << I << " J = " << J << std::endl;
 			
-			// копируем из старого массива в новый с учетом перемен мест
-			// копируем все от start_ptr до next_row_ptr 
-			// 4 варианта, как придется менять местами:
+			// copy from old array to new with swap 
+			// copy all from start_ptr to next_row_ptr 
+			// 4 variants of swap
 
-			// (1) если один из I или J не существует, тогда пропускаем и ничего не делаем
+			// (1) I or J not exist, do nothing 
 			if (I == -1 || J == -1) 
 				simple_copy(matr->items, new_matr->items, start_line_offset, end_line_offset);
 
-			// (2) вариант - один ноль, второй не ноль, надо сдвигать (самое сложное копирование)
+			// (2) one of I or J = 0, another != 0 -> shift
 			else if (I_ptr && !J_ptr || J_ptr && !I_ptr) {
-				// заранее разбираемся, кто ноль, а кто не ноль
+				// check which is zero
 				NZItem* not_zero = nullptr;
 				int zero_column = -1;
 				if (I_ptr) { not_zero = I_ptr; zero_column = J; }
@@ -268,40 +264,39 @@ namespace lab1 {
 
 				ptr = matr->items + start_line_offset;
 				//new_matr_ptr = new_matr->items + temp_line_offset;
-				int flag = false;    // флаг = 0, пока неноль не перемещен, = 1 после перемещения
+				int flag = false;    // flag = 0 when nonn-zero is not moved, = 1 after moving
 				for (int k = start_line_offset; k <= end_line_offset; k++, ptr++, new_matr_ptr++) {
 
-					// неноль надо впихнуть на место нуля - находим ближайший слева от него неноль
-					// сюда входят случаи: ptr - последний в матрице / последний в строке / последний перед тем, куда надо вставить тот
+					// find first non-zero element on the left of our non-zero
+					// variants: ptr - last in matrix / last in row / last before place where to insert
 					if (!flag && (k == end_line_offset || (ptr + 1)->column >= zero_column || (ptr + 1)->row != i)) {
-						// сначала копируем текущее значение, если это не not_zero
+						// copy current value if it's non-zero 
 						if (ptr->column != not_zero->column) {
 							*new_matr_ptr = { i, ptr->column, ptr->value };
 							new_matr_ptr++;
 						}
 
-						// после него вставляем not_zero
+						// insert non-zero
 						*new_matr_ptr = { i, zero_column, not_zero->value };
-						flag = true;   // чтобы случайно не вставить несколько раз
+						flag = true;   // for non inserting it several times
 					}
-					// неноль, который перемещаем, копировать не надо
+					// don't copy non-zero
 					else if (ptr->column == not_zero->column)
 						new_matr_ptr--;
-					// если мы далеко от I и J, тогда копируем обычным способом
+					// if we are far from I and J, copy ordinarily
 					else *new_matr_ptr = { i, ptr->column, ptr->value };
 				}
 			}
 
 			else {
-				// (3) если оба не нули, меняем местами значения в ячейках в исходной матрице, копируем в новую, потом меняем в исходной обратно
-				// короче, пользуемся тем, что у нас сохранены указатели на эти ячейки, нам не нужно искать их заново
+				// (3) I != 0 and J != 0 - swap values in old matrix, copy to new and swap in old again
 				if (I_ptr && J_ptr) swap(I_ptr->value, J_ptr->value);
 
 				
-				// (3) если оба нуля, то ничего не делаем
+				// (4) I = 0 and J = 0 - do nothing
 				simple_copy(matr->items, new_matr->items, start_line_offset, end_line_offset);
 
-				// возвращаем I и J в исходной матрице на место
+				// swap I and J in old matrix 
 				if (I_ptr && J_ptr) swap(I_ptr->value, J_ptr->value);
 			}
 			
@@ -312,39 +307,36 @@ namespace lab1 {
 	}
 
 
-
-	// идея: не нужно перебирать каждый элемент строки подряд, достаточно рассматривать только каждый неноль и двух его соседей (то есть смотрим на тройки)
-	// рассматриваем строку, пока в ней не закончатся ненули
-	// пользуемся тем, что внутри массива ненулей числа отсортированы, как они расположены в строке - слева направо
-	// еще идея: так как спрашивают только первый и последний, нам не надо рассматривать все промежуточные ненули
-	// такой метод будет плох, только если вся строка состоит из равных ненулевых чисел (но это вряд ли, тк матрица разреженная)
+	// idea: don't chech every element, we can check only non-zeros and their left and right neighbours for all non-zeros in row
+	// use that non-zeros array is sorted as values are placed in a row - left to right
+	// one nore idea: we need only first and last non-zeros, so we don't need to check values berween them
+	// it would be unefficient only if row contains only equal non-zeros (unlikely, cause matrix is sparse) 
 
 
-
-	// функция находит номер I столбца элемента (первый, который больше, чем предыдущий)
-	// если это ноль, возвращает нулевой указатель, если не ноль, то действующий указатель
+	// find I - index of column where first nz if bigger then previous
+	// if value = 0, return nullptr, if != 0, return pointer to this element
 	NZItem* find_I_item_in_a_row(Matrix* matr, NZItem *&ptr, int temp_row, int& I) {
-		// слева направо ищем первый больший предыдущего
+		// left to right find first element bigger previous
 		while (ptr < matr->items + matr->NZ_items && ptr->row == temp_row) {
 			int column = ptr->column;
-			// если ptr не крайний слева, сравниваем значение с левым соседом
+			// if ptr is not left, compare with left neighbour
 			if (column != 0) {
 				NZItem* prev = (ptr == matr->items) ? nullptr : (ptr - 1);
 				double left_value = (prev && prev->row == temp_row && prev->column == column - 1) ? prev->value : 0;
 
-				// смотрим, что больше, и меняем I, если повезло
+				// check which is bigger and change I if it is
 				if (ptr->value > left_value) {
 					I = column;
 					return ptr;
 				}
 			}
 
-			// если ptr не крайний справа, сравниваем значение с правым соседом
+			// if ptr is not right, compare with right neighbour
 			if (column != matr->n - 1) {
 				NZItem* next = (ptr == matr->items + matr->NZ_items) ? nullptr : (ptr + 1);
 				double right_value = (next && next->row == temp_row && next->column == column + 1) ? next->value : 0;
 
-				// смотрим, что больше, и меняем I
+				// check which is bigger and change I
 				if (right_value > ptr->value) {
 					I = column + 1;
 					return (right_value ? next : nullptr);
@@ -354,35 +346,35 @@ namespace lab1 {
 		}
 		ptr--;
 		I = -1;
-		return nullptr;  // если не нашлось такого числа
+		return nullptr;  // if not found
 	}
 
 
 
-	// функция находит номер J столбца элемента (последний, который меньше, чем предыдущий)
-	// если это ноль, возвращает нулевой указатель, если не ноль, то действующий указатель
+	// find index J of last element bigger then previous 
+	// if value = 0, return nullptr, if != 0, return pointer to this element
 	NZItem* find_J_item_in_a_row(Matrix* matr, NZItem*& ptr, int temp_row, int& J) {
 		for (; ptr >= matr->items && ptr->row == temp_row; ptr--) {
 			int column = ptr->column;
 
-			// если ptr не крайний справа, сравниваем значение с правым соседом
+			// if ptr not right, compare with right neigbour
 			if (column != matr->n - 1) {
 				NZItem* next = (ptr == matr->items + matr->NZ_items - 1) ? nullptr : (ptr + 1);
 				double right_value = (next && next->row == temp_row && next->column == column + 1) ? next->value : 0;
 
-				// смотрим, что больше, и меняем J
+				// change J if it's bigger
 				if (right_value < ptr->value) {
 					J = column + 1;
 					return (right_value ? next : nullptr);
 				}
 			}
 
-			// если ptr не крайний слева, сравниваем значение с левым соседом
+			// if ptr not left, compare to left neighbour
 			if (column != 0) {
 				NZItem* prev = (ptr == matr->items) ? nullptr : (ptr - 1);
 				double left_value = (prev && prev->row == temp_row && prev->column == column - 1) ? prev->value : 0;
 
-				// смотрим, что больше, и меняем I, если повезло
+				// change J if it's bigger
 				if (ptr->value < left_value) {
 					J = column;
 					return ptr;
@@ -395,7 +387,7 @@ namespace lab1 {
 
 
 
-	// функция копирования нескольких ненулей из старого массива в новый без изменений
+	// copy several non-zeros from old array to new
 	void simple_copy(NZItem *old_array, NZItem* new_array, int start_offset, int finish_offset) {
 		for (int i = start_offset; i <= finish_offset; i++) {
 			NZItem* temp = old_array + i;
