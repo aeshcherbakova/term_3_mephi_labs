@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "../mvector.h"
 
-using namespace My_template;
 
 TEST(MVectorConstructor, AllConstructors) {
 	mvector<int> vec;
@@ -9,7 +8,6 @@ TEST(MVectorConstructor, AllConstructors) {
 
 	mvector<int> vec2(3);
 	EXPECT_EQ(vec2.size(), 0);
-	EXPECT_EQ(vec2[0], 0);
 
 	vec.push_back(1);
 	vec.push_back(2);
