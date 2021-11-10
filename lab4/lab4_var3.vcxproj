@@ -24,6 +24,7 @@
     <ProjectGuid>{b479ef4e-7467-4658-9315-25037259ccff}</ProjectGuid>
     <RootNamespace>lab4var3</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>lab4</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -139,38 +140,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Aura.cpp" />
-    <ClCompile Include="Aviation.cpp" />
-    <ClCompile Include="Building.cpp" />
-    <ClCompile Include="Castle.cpp" />
-    <ClCompile Include="Config.cpp" />
-    <ClCompile Include="Den.cpp" />
-    <ClCompile Include="dialog.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="Heavy_Infantry.cpp" />
-    <ClCompile Include="Hero.cpp" />
-    <ClCompile Include="Landscape.cpp" />
-    <ClCompile Include="Light_Infantry.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Tower.cpp" />
-    <ClCompile Include="Wall.cpp" />
+    <ClCompile Include="src\Aura.cpp" />
+    <ClCompile Include="src\Aviation.cpp" />
+    <ClCompile Include="src\Building.cpp" />
+    <ClCompile Include="src\Castle.cpp" />
+    <ClCompile Include="src\Config.cpp" />
+    <ClCompile Include="src\Den.cpp" />
+    <ClCompile Include="src\dialog.cpp" />
+    <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\Heavy_Infantry.cpp" />
+    <ClCompile Include="src\Hero.cpp" />
+    <ClCompile Include="src\Landscape.cpp" />
+    <ClCompile Include="src\Light_Infantry.cpp" />
+    <ClCompile Include="src\Tower.cpp" />
+    <ClCompile Include="src\Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Aura.h" />
-    <ClInclude Include="Aviation.h" />
-    <ClInclude Include="Building.h" />
-    <ClInclude Include="All_Header.h" />
-    <ClInclude Include="Castle.h" />
-    <ClInclude Include="Config.h" />
-    <ClInclude Include="Den.h" />
-    <ClInclude Include="dialog.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="Heavy_Infantry.h" />
-    <ClInclude Include="Hero.h" />
-    <ClInclude Include="Landscape.h" />
-    <ClInclude Include="Light_Infantry.h" />
-    <ClInclude Include="Tower.h" />
-    <ClInclude Include="Wall.h" />
+    <ClInclude Include="include\All_Header.h" />
+    <ClInclude Include="include\Aura.h" />
+    <ClInclude Include="include\Aviation.h" />
+    <ClInclude Include="include\Building.h" />
+    <ClInclude Include="include\Castle.h" />
+    <ClInclude Include="include\Config.h" />
+    <ClInclude Include="include\Den.h" />
+    <ClInclude Include="include\dialog.h" />
+    <ClInclude Include="include\Enemy.h" />
+    <ClInclude Include="include\Heavy_Infantry.h" />
+    <ClInclude Include="include\Hero.h" />
+    <ClInclude Include="include\Landscape.h" />
+    <ClInclude Include="include\Light_Infantry.h" />
+    <ClInclude Include="include\Tower.h" />
+    <ClInclude Include="include\Wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

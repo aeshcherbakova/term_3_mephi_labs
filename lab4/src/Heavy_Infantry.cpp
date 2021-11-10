@@ -1,5 +1,5 @@
-#include "All_Header.h" 
-#include "Heavy_Infantry.h"
+#include "../include/All_Header.h" 
+#include "../include/Heavy_Infantry.h"
 
 namespace Tower_Defence {
 

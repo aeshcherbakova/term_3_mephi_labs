@@ -4,3 +4,5 @@ Release/
 *.user
 bin/
 packages/
+latex/
+html/
