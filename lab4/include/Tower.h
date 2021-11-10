@@ -1,8 +1,8 @@
 /*!
 \file
-\brief Заголовочный файл с описанием класса башни
-Данный файл содержит в себе определения основных
-методов башни
+\brief Tower class description header file
+This file contains the definitions of the main
+tower methods
 */
 
 #pragma once

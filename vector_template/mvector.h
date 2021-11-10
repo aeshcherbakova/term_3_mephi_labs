@@ -24,28 +24,25 @@ private:
 	void resize();
 
 public:
-	// конструкторы
 	mvector();
 	mvector(size_t size);
 	mvector(std::initializer_list<T> init_list);
-	mvector(const mvector<T>& other);  // копирующий коструктор
+	mvector(const mvector<T>& other);  
 	~mvector();
 
-	// просто методы
 	size_t size() const noexcept { return _cur; };
 	void push_back(const T& el) noexcept;
 	bool empty() const noexcept { return _cur == 0; };
 	void clear() noexcept;
 
 
-	// операторы
-	T& operator= (const T& other) noexcept; // присваивание
+	T& operator= (const T& other) noexcept; // assignment
 	T& operator[] (size_t ind);             // l-value
 	const T& operator[] (size_t ind) const; // r-value
 	bool operator==(const mvector<T>&);
 	bool operator!=(const mvector<T>&);
 
-	// методы для итераторов
+	// iterator methods
 	typedef mvectorIt<T> Iterator;
 	Iterator begin() const noexcept { return Iterator(_arr); }
 	Iterator end() const noexcept   { return Iterator(_arr + _cur); }
@@ -270,4 +267,3 @@ inline const T* mvectorConstIt<T>::operator->() const {
 	throw std::out_of_range("Illegal value of iterator!");
 	return _cur;
 }
-

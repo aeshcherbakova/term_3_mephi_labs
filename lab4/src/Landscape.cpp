@@ -15,13 +15,13 @@ namespace Tower_Defence {
 
     Landscape::Landscape() {
         m_config = new Config();
-        // чтение карты уровня из конфига
+        // reading level map from config
         load_map();  
 
-        // чтение таблиц логов (хар-ки врагов уже прочитаны)
+        // reading log tables (characteristics of enemies have already been read)
         load_dens();
 
-        // вычисление путей для всех видов врагов
+        // calculating paths for all kinds of enemies
         path_for_light();
         path_for_heavy();
         path_for_avia();
@@ -30,7 +30,7 @@ namespace Tower_Defence {
     Landscape::~Landscape() {
         if (m_castle) delete m_castle; 
         if (m_config) delete m_config;
-        // башни, стены и логова сами удаляются
+        // towers, walls and lairs are removed by themselves
         //for (std::list<Enemy*>::iterator it = m_enemies.begin(); it != m_enemies.end(); it++)
         //    delete (*it);
     }
@@ -84,9 +84,9 @@ namespace Tower_Defence {
         return cost;
     }
 
-    // возвращает координату в одномерном массиве, если строить можно (иначе исключение)
+    // returns the coordinate in a one-dimensional array, if it is possible to build (otherwise an exception)
     int Landscape::can_build_smth(int i, int j) const {
-        // проверка на то, что координаты внутри карты вообще
+        // checking that the coordinates are inside the map at all
         if (i < 0 || j < 0 || i >= m_width || j >= m_height)
             throw std::out_of_range("This coordinates don't belog to map!");
         int coord = index(i, j);
@@ -105,7 +105,7 @@ namespace Tower_Defence {
         if (!fin.is_open())
             throw std::runtime_error("File not found!");
 
-        char buf[50];  // принимаем, что уровень не больше, чем 50 клеток в ширину
+        char buf[50];  // assume that the level is not more than 50 cells wide
 
         fin >> m_width;
         fin >> m_height;
@@ -154,7 +154,7 @@ namespace Tower_Defence {
             if (buf[0] == '#') {
                 fin >> buf >> i >> j;   // coordinates: 0 0
                 int coord = index(i, j);
-                m_dens.push_back(Den(coord));  // создаем новое логово
+                m_dens.push_back(Den(coord));  // creating a new den
 
                 while (fin >> buf) {
                     if (buf[0] == '#') break;
@@ -184,7 +184,7 @@ namespace Tower_Defence {
                         enemy = new Aviation_Hero(m_config->m_enemy_chars[type], auras, coord);
                         break;
                     }
-                    m_dens[m_dens.size() - 1].add_enemy(std::pair<int, Enemy*>(time, enemy));  // добавляем каждого врага
+                    m_dens[m_dens.size() - 1].add_enemy(std::pair<int, Enemy*>(time, enemy));  // add each enemy
                 }
             }
         }
@@ -193,7 +193,7 @@ namespace Tower_Defence {
 
     void Landscape::read_auras(std::ifstream& fin, std::vector<Aura*>& vec) {
         char buf[50];
-        fin >> buf;  // служебный символ, потом первый тип ауры
+        fin >> buf;  // service symbol, then the first type of aura
         while (!fin.eof()) {
             fin >> buf;
             if (buf[0] == '}') break;
@@ -231,7 +231,7 @@ namespace Tower_Defence {
     }
 
     void Landscape::castle_receive_damage(float damage, std::stringstream& ss) {
-        m_castle->receive_damage(damage, ss);  // если здоровье замка кончилось, кидается исключение
+        m_castle->receive_damage(damage, ss);  // if the health of the castle is over, an exception is thrown
     }
 
     void Landscape::wall_receive_damage(int coord, float damage, std::stringstream& ss) {
@@ -264,7 +264,7 @@ namespace Tower_Defence {
 
 
     void Landscape::path_for_light() {
-        // обновляем данные
+        // update the data
         for (int i = 0; i < m_width * m_height; i++)
             m_map[i].light_dist = INF;
         m_map[m_castle->getCoord()].light_dist = 0;
@@ -277,7 +277,7 @@ namespace Tower_Defence {
             cur = q.front();
             q.pop();
 
-            // добавляем все следующие направления, если это равнина
+            // add all the following directions if it is a plain
             std::vector<int> directions = { right(cur), left(cur), up(cur), down(cur) };
             for (auto direct : directions) {
                 if (direct != -1 && m_map[direct].type == LT::PLAIN && m_map[direct].light_dist > m_map[cur].light_dist + 1) {
@@ -289,8 +289,8 @@ namespace Tower_Defence {
             }
         }        
 
-        // прошли по всей карте, если какое-то из логов не досягаемо, кидаем исключение
-        // если логова в досягаемости, но игрок загнал пехоту в ловушку, это праивилами не запрещается :)
+        // walked all over the map, if some of the logs dens out of reach, throw an exception
+        // if the lair is within reach, but the player drove the infantry into a trap, this is not prohibited by the rules :)
         for (mvector<Den>::ConstIterator it = m_dens.cbegin(); it != m_dens.cend(); it++)
             if (!it->is_empty() && m_map[it->getCoord()].light_dist == INF)
                 throw std::logic_error("Error! No way for light infantry!");
@@ -309,7 +309,7 @@ namespace Tower_Defence {
             cur = q.front();
             q.pop();
 
-            // добавляем все следующие направления, если это равнина или стена
+            // add all the following directions if it is a plain or a wall
             std::vector<int> directions = { right(cur), left(cur), up(cur), down(cur) };
             for (auto direct : directions) {
                 if (direct != -1 && (m_map[direct].type == LT::PLAIN || m_map[direct].type == LT::WALL) 
@@ -322,7 +322,7 @@ namespace Tower_Defence {
                     m_map[direct].heavy_dist = m_map[cur].heavy_dist + 1;
             }
         }
-        // исключения не выкидываются
+        // exceptions are not thrown
     }
 
     void Landscape::path_for_avia() {
@@ -338,7 +338,7 @@ namespace Tower_Defence {
             cur = q.front();
             q.pop();
 
-            // добавляем все следующие направления, если это равнина или стена
+            // add all the following directions if it is a plain or a wall
             std::vector<int> directions = { right(cur), left(cur), up(cur), down(cur) };
             for (auto direct : directions) {
                 if (direct != -1 && m_map[direct].type != LT::HILL && m_map[direct].avia_dist > m_map[cur].avia_dist + 1) {
@@ -359,28 +359,28 @@ namespace Tower_Defence {
     }
 
 
-    // заранее проверено, что эта координата соответствует стене
+    // checked beforehand that this coordinate corresponds to the wall
     void Landscape::repair_wall(int coord) {
         if (m_map[coord].type != LT::WALL)
             throw std::invalid_argument("This is not the wall!");
 
-        // находим ту самую стену
+        // find this wall
         for (std::list<Wall>::iterator it = m_walls.begin(); it != m_walls.end(); it++)
             if (it->getCoord() == coord) {
-                m_castle->buy_anything(it->repair());  // repair сразу возвращает стоимость 
+                m_castle->buy_anything(it->repair());  // repair returns the cost
                 return;
             }
             
     }
 
-    // проверка на то, что координата принадлежит карте и является равниной, уже должна быть прежде сделана
-    // функция выкидывает исключение, только если при постройке не будет пути для пехоты
+    // checking that the coordinate belongs to the map and is a plain must already be done before
+    // the function throws an exception only if there is no path for the infantry during construction
     void Landscape::build_wall(int i, int j) {
-        int coord = can_build_smth(i, j);                            // искл, если не равнина
+        int coord = can_build_smth(i, j);                            // exception if not plain
         m_map[coord].type = LT::WALL;
         try { 
-            path_for_light();                                        // искл, если перегораживает дорогу
-            m_castle->buy_anything(m_config->m_wall_info.cost);      // искл, если не хватает денег
+            path_for_light();                                        // exception if blocks the road
+            m_castle->buy_anything(m_config->m_wall_info.cost);      // exception if there is not enough money
             m_walls.push_back(Wall(coord, m_config->m_wall_info));  
         }
         catch (std::exception& ex) {
@@ -391,13 +391,13 @@ namespace Tower_Defence {
     }
 
     void Landscape::build_tower(int i, int j) {
-        int coord = can_build_smth(i, j);                                // искл, если не равнина
+        int coord = can_build_smth(i, j);                                // exception if not plain
         m_map[coord].type = LT::TOWER;
         try {
-            path_for_light();                                            // искл, если перегораживает дорогу
-            m_castle->buy_anything(m_config->m_towers_info[0].cost);     // искл, если не хватает денег
+            path_for_light();                                            // exception if blocks the road
+            m_castle->buy_anything(m_config->m_towers_info[0].cost);     // exception if there is not enough money
             m_towers.push_back(Tower(coord, m_config->m_towers_info));   
-            path_for_heavy();  // пересчитываем, тк перегораживает дорогу
+            path_for_heavy();  // re-count, as it blocks the road
         }
         catch (std::exception& ex) {
             m_map[coord].type = LT::PLAIN;
@@ -410,7 +410,7 @@ namespace Tower_Defence {
         if (m_map[coord].type != LT::TOWER)
             throw std::invalid_argument("This is not a tower :(");
          
-        // находим ту самую башню
+        // find this tower
         for (mvector<Tower>::Iterator it = m_towers.begin(); it != m_towers.end(); it++)
             if (it->getCoord() == coord) {
                 m_castle->buy_anything(it->level_up());
@@ -431,10 +431,10 @@ namespace Tower_Defence {
             field[i] = { '-', Color::White };
 
         Color color;
-        // сначала пробегаемся по массиву врагов, отмечаем их на карте. Потом все свободные места отмечаем как ландшафт/строения
+        // first we go over the array of enemies, mark them on the map. Then we mark all free places as landscape / buildings
         for (std::list<Enemy*>::const_reverse_iterator it = m_enemies.rbegin(); it != m_enemies.rend(); it++) {
             color = Color::White;
-            // наложенные ауры
+            // all auras
             const std::vector<Aura*>* ex_aura = (*it)->getExertedAuras();
             if (ex_aura) switch (static_cast<int>((*ex_aura)[0]->getType())) {
             case 0: color = Color::Blue;  break;  //speed
@@ -442,7 +442,7 @@ namespace Tower_Defence {
             case 2: color = Color::Cyan;  break;   //heal
             }
 
-            // собственные ауры
+            // own auras
             const std::vector<Aura*>* aura = (*it)->getAuras();
             if (aura) switch (static_cast<int>((*aura)[0]->getType())) {
             case 0: color = Color::LightBlue;  break;  //speed
@@ -466,7 +466,7 @@ namespace Tower_Defence {
             }
         }
 
-        // потом пробегаемся по массиву башен, тк они могут быть разных уровней, а в классе Cell уровень башни не хранится
+        // then we go through the array of towers, because they can be of different levels, and the level of the tower is not stored in the Cell class
         for (mvector<Tower>::ConstIterator it = m_towers.cbegin(); it != m_towers.cend(); it++)
             field[it->getCoord()] = { it->getLevel() + '0', Color::Yellow };
         
@@ -487,41 +487,41 @@ namespace Tower_Defence {
                 case LT::DEN:
                     field[i] = { '*', Color::Red };       break;
                 case LT::TOWER:
-                    // башни уже отмечены
+                    // towers are already marked
                     break;
                 }
 
-        // изменение цвета выбранной клетки (башни или стены, когда игрок выбирает, какую именно улучшить)
+        // change the color of the selected cell (tower or wall when the player chooses which one to upgrade)
         if (coord != -1)
             field[coord].second = color_;
 
         return field;
     }
 
-    // возвращает true, если уровень пройден; false - уровень продолжается; искл - уровень пригран
+    // returns true if the level is passed; false - the level continues; excl - level trimmed
     bool Landscape::make_turn(std::stringstream& ss) {
         m_time++;
 
         ss << "Turn #" << m_time << "\n";
 
-        // проверяем, вдруг мы выиграли игру
+        // check if we won the game
         if (check_dens_empty() && !m_enemies.size())
             return true;
 
-        // замок хилится и приносит деньги
+        // the castle is healed and brings money
         m_castle->turn(*this, ss);
 
 
-        // логова выпускают врагов
+        // dens release enemies
         for (mvector<Den>::Iterator it = m_dens.begin(); it != m_dens.end(); it++)
             if (!it->is_empty())
                 it->turn(*this, ss);
 
-         // враги освобождаются от аур
+         // enemies are freed from auras
         for (std::list<Enemy*>::iterator it = m_enemies.begin(); it != m_enemies.end(); it++)
             (*it)->release_from_auras();
 
-        // влияние аур
+        // influence of auras
         for (std::list<Enemy*>::const_iterator it_1 = m_enemies.begin(); it_1 != m_enemies.end(); it_1++) {
             const std::vector<Aura*>* auras = (*it_1)->getAuras();
             if (!auras) break;
@@ -534,7 +534,7 @@ namespace Tower_Defence {
             }
         }
 
-        // враги ходят
+        //enemies move
         for (std::list<Enemy*>::iterator it = m_enemies.begin(); it != m_enemies.end();)
             if (!(*it)->move(*this, ss)) {
                 delete (*it);
@@ -542,9 +542,7 @@ namespace Tower_Defence {
             }
             else it++;
 
-
-
-        // башни стреляют
+        // towers shoot
         for (mvector<Tower>::Iterator it = m_towers.begin(); it != m_towers.end(); it++)
             it->turn(*this, ss);
 

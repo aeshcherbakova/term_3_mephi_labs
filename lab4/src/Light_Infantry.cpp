@@ -19,11 +19,11 @@ namespace Tower_Defence {
                     next = dir;
             this->setCoord(land, next);
 
-            // сделали ход. Если пришли в замок, то наносим урон и самоуничтожаемся
+            // made a move. If you came to the castle, then we inflict damage and self-destruct
             if (land.getDistLight(next) == 0) {
                 float damage = getDamage();
                 ss << "Light (coord " << next << ") damages Castle - " << damage << "\n";
-                land.castle_receive_damage(damage, ss); // если замок умер, здесь выбрасывается искл
+                land.castle_receive_damage(damage, ss); // if the castle died, an exception is thrown here
                 return 0;
             }
         }

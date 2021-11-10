@@ -11,10 +11,10 @@ namespace Tower_Defence {
 
 	void Den::turn(Landscape& land, std::stringstream& ss) {
 		while (!schedule.empty() && land.getTime() == schedule.front().first) {
-			// это просто вывод текста
+			// juxt text output
 			ET type = schedule.front().second->getType();
 			ss << "Den (coord " << this->getCoord() << ") release " << static_cast<int>(type);
-			// если герой, выводим ауры
+			// if hero, output auras
 
 			const std::vector<Aura*>* auras = schedule.front().second->getAuras();
 			if (auras) {
@@ -24,7 +24,6 @@ namespace Tower_Defence {
 			}
 			ss << "\n";
 
-			// это функция
 			land.add_enemy(schedule.front().second);
 			schedule.pop();
 		}

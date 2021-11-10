@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "../Hypocycloid/Hypocycloid.h"
 
-// Тестирование конструкторов
 TEST(HypocycloidConstructor, DefaultConstructor)
 {
 	lab2::Hypocycloid h1;
@@ -35,8 +34,7 @@ TEST(HypocycloidConstructor, TestException)
 	ASSERT_ANY_THROW(lab2::Hypocycloid(-6, 5));
 	ASSERT_ANY_THROW(lab2::Hypocycloid(7, 10));
 	ASSERT_ANY_THROW(lab2::Hypocycloid(7, 0));
-
-	// неправильно выкидываю исключения в принципе - они должны быть объектами, а не строками (см документацию)
+	
 	try { lab2::Hypocycloid(7, -5, 9); }
 	catch (std::exception& err) {
 		std::cout << err.what();
@@ -46,7 +44,6 @@ TEST(HypocycloidConstructor, TestException)
 	//ASSERT_ANY_THROW(lab2::Hypocycloid(7, -5, 9));
 }
 
-// тестирование сеттеров
 TEST(HypocycloidMethods, Setters)
 {
 	lab2::Hypocycloid h;
@@ -63,7 +60,6 @@ TEST(HypocycloidMethods, Setters)
 	ASSERT_ANY_THROW(h.setR_IN(-12));
 }
 
-// тестирование других методов
 TEST(HypocycloidMethods, Parameters)
 {
 	lab2::Hypocycloid a;
@@ -87,12 +83,10 @@ TEST(HypocycloidMethods, Angle)
 	lab2::Hypocycloid b(10, 2, 3);
 	lab2::Hypocycloid c(5, 4);
 
-	// радиус кривизны
-	ASSERT_NEAR(8, a.curvature_radius(pi), err);   // можно проверить в построителе
+	ASSERT_NEAR(8, a.curvature_radius(pi), err);   
 	ASSERT_NEAR(0.2857, b.curvature_radius(0), err);
 	ASSERT_NEAR(5.0612, c.curvature_radius(2), err);
 
-	// точка на графике
 	ASSERT_NEAR(3, a.point_from_angle(0).x, err);
 	ASSERT_NEAR(0, a.point_from_angle(0).y, err);
 	ASSERT_NEAR(-5.388378, b.point_from_angle(3).x, err);
@@ -100,15 +94,13 @@ TEST(HypocycloidMethods, Angle)
 	ASSERT_NEAR(-3, c.point_from_angle(-4 * pi).x, err);
 	ASSERT_NEAR(0, c.point_from_angle(-4 * pi).y, err);
 
-	// cекториальная площадь
 	ASSERT_NEAR(0, a.area(0), err);
 	ASSERT_NEAR(29.191129, b.area(0.5 * pi), err);
 	ASSERT_NEAR(-10.624769, c.area(2 * pi), err);
 }
 
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }

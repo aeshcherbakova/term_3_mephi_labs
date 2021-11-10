@@ -9,7 +9,7 @@ namespace Tower_Defence {
     }
 
     int Wall::repair() {
-        int cost = cost_repair(); // если здоровье макс, здесь вылетит исключение
+        int cost = cost_repair(); // if health is max, an exception will be thrown here
         m_health = m_table.max_health;
         return cost;
     }

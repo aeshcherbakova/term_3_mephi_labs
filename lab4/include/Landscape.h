@@ -31,8 +31,6 @@ namespace Tower_Defence {
 		WALL, TOWER, CASTLE, DEN
 	} LT;
 
-
-	// ячейка на карте
 	struct Cell {
 		LandType type;
 		int light_dist;
@@ -44,17 +42,17 @@ namespace Tower_Defence {
 	};
 
 
-	// самый главный класс - собсна, весь уровень
+	// the most important class is sobsna, the whole level
 	class Landscape {
 
 
 	private:
-		int m_time;              // кол-во единиц времени (ходов), прошедшее с начала игры
+		int m_time;              // number of time units (moves) elapsed since the beginning of the game
 		int m_width, m_height;
 		Castle* m_castle;
-		mvector<Cell> m_map;     // двумерная матрица "схлопнулась" в одномерный массив 
+		mvector<Cell> m_map;     // a two-dimensional matrix "collapsed" into a one-dimensional array
 
-		Config* m_config;  // вся статическая инфа
+		Config* m_config;  // all static info
 
 		mvector<Tower> m_towers;
 		mvector<Den>   m_dens;
@@ -81,7 +79,6 @@ namespace Tower_Defence {
 		void add_enemy(Enemy* en);
 		
 		
-
 		int cost_new_wall()       const;
 		int cost_new_tower()      const;
 		int cost_upgrade_castle() const;
@@ -103,8 +100,8 @@ namespace Tower_Defence {
 		std::pair<char, Color>* make_colored_field(int coord = -1, Color color = Color::White) const noexcept;
 		bool make_turn(std::stringstream&);
 
-		// методы для перемещения по карте
-		// возвращают индекс в одномерном массиве ячеек, если выход за границу, то возвр исключение
+		// methods for moving around the map
+		// return the index in a one-dimensional array of cells, if out of bounds, then return an exception
 		int right(int) const noexcept;
 		int left(int) const noexcept;
 		int up(int) const noexcept;
@@ -116,12 +113,12 @@ namespace Tower_Defence {
 
 
 	private:
-		// чтение из конфигов
+		// reading from configs
 		void load_map();
 		void load_dens();
 		void read_auras(std::ifstream& fin, std::vector<Aura*>& vec);
 
-		// метод вычисления расстояния от замка (для всех трех типов)
+		// method for calculating the distance from the castle (for all three types)
 		void path_for_light();
 		void path_for_heavy();
 		void path_for_avia();
@@ -133,4 +130,3 @@ namespace Tower_Defence {
 }
 
 #endif __LANDSCAPE__
-

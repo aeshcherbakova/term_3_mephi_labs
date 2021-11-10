@@ -8,14 +8,14 @@ namespace Tower_Defence {
 	class Wall : public Building {
 	private:
 		WallInfo& m_table;
-		float m_health;  // текущая прочность
+		float m_health; 
 
 	public:
 		Wall(int coord, WallInfo& info) : Building(coord), m_table(info), m_health(info.max_health) {};
 		~Wall() {};
 
-		void damage(float damage);  // нанесение урона стене
-		int repair();  // ремонт стена
+		void damage(float damage);  
+		int repair();
 		int cost_repair() const;
 		void turn(Landscape&, std::stringstream&) {};
 

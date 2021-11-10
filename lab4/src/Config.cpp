@@ -46,7 +46,7 @@ namespace Tower_Defence {
         char buf[50];
         float fl;
         for (int i = 0; i < 6; i++) {
-            fin >> buf;  // служебный символ # + тип врага
+            fin >> buf;  // service symbol # + enemy type
             m_enemy_chars[i].first = static_cast<EnemyType>(i);
             while (fin >> buf) {
                 if (buf[0] == '#') break;

@@ -3,20 +3,19 @@
 
 using namespace lab0;
 
-// программа для вычисления наименьшего среди наибольших элементов каждой строки матрицы
+// program for calculating the smallest among the largest elements of each row of the matrix
 
 int main() {
-	Line* arr = nullptr;   // исходный массив
-	int m;                 // кол-во строк в матрице
-	double res;            // полученный результат
+	Line* arr = nullptr;   
+	int m;                 // num of rows in matrix
+	double res;            // result
 
-	arr = input(m);        //ввод матрицы
+	arr = input(m);       
 	if (!arr) {
 		std::cout << "Incorrect data" << std::endl;
 		return 1;
 	}
 
-	// вычисление требуемого результата
 	if (minmax(arr, m, res)) {
 		std::cout << "Error in allocate memory" << std::endl;
 		erase(arr, m);

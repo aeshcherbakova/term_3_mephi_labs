@@ -14,24 +14,24 @@ namespace Tower_Defence {
 	}ET;
 
 
-	// тип врага + ассоциативный массив его характеристик
+	// enemy type + associative array of its characteristics
 	typedef std::pair<EnemyType, std::map<std::string, float>> enemy_type_info;
 
 	class Enemy {
 	private:
 		EnemyType type;
-		float     health;  // максимальное здоровье будет доставаться из исходной таблицы
-		int       heal_cooldown;  // время до восстановления здоровья
+		float     health;  // maximum health will be taken from the original table
+		int       heal_cooldown;  // time to health recovery
 		int       coord;
 		
 		std::vector<Aura*> exerted_auras;
-		std::map<std::string, float>& all_info;   // инфа с изначальными хар-ками
+		std::map<std::string, float>& all_info;   // infa with initial characteristics
 
 
 
 	public:
 		Enemy(enemy_type_info&, int coord);
-		~Enemy() {};  // ауры удаляюся в деструкторе героев
+		~Enemy() {};  // auras are deleted in the hero destructor
 		
 		float getHealth()       const noexcept { return health; }
 		int   getCoord()        const noexcept { return coord; }
@@ -46,7 +46,7 @@ namespace Tower_Defence {
 		void release_from_auras()     noexcept { exerted_auras.clear(); }
 		void receive_damage(float damage);
 
-		virtual const std::vector<Aura*>* getAuras() const noexcept { return nullptr; };  // это нужно, чтобы отличать героев от негероев
+		virtual const std::vector<Aura*>* getAuras() const noexcept { return nullptr; };  // it is necessary to distinguish heroes from non-heroes
 
 		void setCoord(Landscape& land, int coord);
 		void heal() noexcept;

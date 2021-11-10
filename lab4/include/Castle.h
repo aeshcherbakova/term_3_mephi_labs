@@ -9,17 +9,17 @@ namespace Tower_Defence {
 	class Castle : public Building {
 	
 	private:
-		int m_level;              // уровень замка
-		float m_durability;       // текущая прочность
-		int m_money;              // кол-во золота в распоряжении игрока в данный момент
+		int m_level;              
+		float m_durability;       // current health
+		int m_money;              // the amount of gold at the player's disposal at the moment
 
 		int m_repair_and_revenue_cooldown;
-		std::vector<Castle_Level_Info>& m_table;    // таблица информации об уровнях замка (загрузка из конфига)
+		std::vector<Castle_Level_Info>& m_table;    // table of information about castle levels (loading from config)
 
 	public: 
 		
 		Castle(std::vector<Castle_Level_Info>& info, int coord = 0, int money = 0);
-		~Castle();  // вроде бы ничего удалять не надо
+		~Castle(); 
 
 		
 		int getLevel() const noexcept { return m_level; }
@@ -29,9 +29,9 @@ namespace Tower_Defence {
 		float getMaxDurability() const noexcept { return m_table[m_level].max_durability; }
 		const std::vector<Castle_Level_Info>& getTable() const noexcept { return m_table; }
 
-		void buy_anything(int cost);  // выкидывает исключение, если недостаточно денег
+		void buy_anything(int cost);  // throws an exception if not enough money
 	
-		void receive_damage(float damage, std::stringstream&);    // поулчить урон от врага 
+		void receive_damage(float damage, std::stringstream&);  
 
 		void turn(Landscape&, std::stringstream&);
 		void level_up();

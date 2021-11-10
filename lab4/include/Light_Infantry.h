@@ -17,7 +17,7 @@ namespace Tower_Defence {
     public:
         Light_Infantry_Hero(enemy_type_info& type_info, std::vector<Aura*>& auras, int coord = -1) :
             Light_Infantry(type_info, coord), Hero(auras) {};
-        // деструктор по умолчанию - деструкторы базовых классов
+        // default destructor - destructors of base classes
         const std::vector<Aura*>* getAuras() const noexcept { return Hero::getAuras(); }
     };
 }

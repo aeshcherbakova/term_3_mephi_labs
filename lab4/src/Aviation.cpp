@@ -12,8 +12,8 @@ namespace Tower_Defence {
         for (int i = 0; i < speed; i++) {
             int coord = this->getCoord();
 
-            if (ammunition > 1) {  // всегда оставляем один снаряд для замка
-                // за один ход можно и стрелять в стены, и летать
+            if (ammunition > 1) {  // we always leave one projectile for the castle
+                // in one move you can shoot at walls and fly
                 for (std::list<Wall>::const_iterator it = land.getWalls().begin(); it != land.getWalls().end(); it++) {
                     if (land.distance(coord, it->getCoord()) <= getRadius()) {
                         float damage = getDamage();
@@ -32,11 +32,11 @@ namespace Tower_Defence {
                     next = dir;
             this->setCoord(land, next);
 
-            // сделали ход. Если пришли в замок, то наносим урон и самоуничтожаемся
+            // made a move. If you came to the castle, then we inflict damage and self-destruct
             if (land.getDistAvia(getCoord()) == 0) {
                 float damage = getDamage();
                 ss << "Heavy (coord " << next << ") damages Castle - " << damage << "\n";
-                land.castle_receive_damage(damage, ss); // если замок умер, здесь выбрасывается искл
+                land.castle_receive_damage(damage, ss); // if the castle died, exception is thrown out here
                 return 0;
             }
         }

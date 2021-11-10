@@ -6,7 +6,7 @@
 namespace Tower_Defence {
     class Aviation : public Enemy {
     private:
-        int ammunition;  // боезапас (кол-во выстрелов)
+        int ammunition;  // number of shoots
 
     public:
         Aviation(enemy_type_info& type_info, int coord = -1);
@@ -19,7 +19,7 @@ namespace Tower_Defence {
     public:
         Aviation_Hero(enemy_type_info& type_info, std::vector<Aura*>& auras, int coord = -1) :
             Aviation(type_info, coord), Hero(auras) {};
-        // деструктор по умолчанию - деструкторы базовых классов
+        // default destructor - destructors of base classes
         const std::vector<Aura*>* getAuras() const noexcept { return Hero::getAuras(); }
     };
 }

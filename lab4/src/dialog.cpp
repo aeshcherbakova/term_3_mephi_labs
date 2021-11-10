@@ -69,8 +69,7 @@ namespace Tower_Defence {
 		std::cout << "                      ---------------------" << std::endl;
 		std::cout << "                      |     GAME OVER!    |" << std::endl;
 		std::cout << "                      ---------------------" << std::endl;
-		// какой-нибудь рисунок надо
-		// и вообще есть несколько вариантов, почему игра закрылась - поломка внутри проги / выиграл / проиграл / сам ушел, не закончив уровень
+		// and in general there are several options why the game closed - a breakdown inside the program / won / lost / left without finishing the level
 	}
 
 	void game_won() {
@@ -82,7 +81,7 @@ namespace Tower_Defence {
 
 	
 	int next_turn(Landscape& land) {
-		std::stringstream ss;  // вывод логов в консоль
+		std::stringstream ss;  // output logs in console
 		try {
 			if (land.make_turn(ss)) {
 				std::cout << ss.str();
@@ -90,7 +89,7 @@ namespace Tower_Defence {
 				return 0;
 			}
 		}
-		catch (std::exception&) {  // только одно исключение - у замка кончилось здоровье
+		catch (std::exception&) {  // only one exception - the castle ran out of health
 			std::cout << ss.str();
 			game_over();
 			return 0;
@@ -102,13 +101,13 @@ namespace Tower_Defence {
 	int build_tower(Landscape& land) {
 		try {
 			int cost;
-			cost = land.cost_new_tower(); // выкидывается, только если не хватает денег
+			cost = land.cost_new_tower(); // thrown out only if there is not enough money
 
 			std::cout << "Input coordinates, where to build a new tower" << std::endl;
 			int i, j;
 			if (!getNum(i, "") || !getNum(j, "")) return 0;
 
-			land.build_tower(i, j);  // выкидывается, если блокирует путь для пехоты или эта ячейка не равнина
+			land.build_tower(i, j);  // thrown if blocking the path for infantry or this cell is not a plain
 			return 1;
 		}
 		catch (std::exception& ex) {
@@ -121,13 +120,13 @@ namespace Tower_Defence {
 	int build_wall(Landscape& land) {
 		try {
 			int cost;
-			cost = land.cost_new_wall(); // выкидывается, только если не хватает денег
+			cost = land.cost_new_wall(); // thrown out only if there is not enough money
 
 			std::cout << "Input coordinates, where to build a new wall" << std::endl;
 			int i, j;
 			if (!getNum(i, "") || !getNum(j, "")) return 0;
 
-			land.build_wall(i, j);  // выкидывается, если блокирует путь для пехоты или это не равнина
+			land.build_wall(i, j);  // thrown if blocking the path for infantry or this cell is not a plain
 			return 1;
 		}
 		catch (std::exception& ex) {
@@ -138,13 +137,13 @@ namespace Tower_Defence {
 	}
 
 	int level_up_tower(Landscape& land) {
-		// пробегаемся по массиву башен, подсвечиваем каждую по очереди, выводим инфу и спрашиваем, если можно ее апгрейднуть
+		// go through the array of towers, highlight each one in turn, display information and ask if you can upgrade it
 		for (mvector<Tower>::ConstIterator it = land.getTowers().cbegin(); it != land.getTowers().cend(); it++) {
 			clear();
-			print_map_in_console(land, it->getCoord());  // выводим карту заново, подсвечивая эту башню
+			print_map_in_console(land, it->getCoord());  // re-display the map, highlighting this tower
 			std::cout << "Tower info: level: " << it->getLevel() << std::endl;
 			try {
-				int cost = land.cost_upgrade_tower(*it);   // если не хватает денег или макс уровень, то искл
+				int cost = land.cost_upgrade_tower(*it);   // if there is not enough money or max level, then excl.
 				std::cout << "Do you want to upgrade this tower? (" << cost << " gold)" << std::endl;
 				if (get_yes_no_answer()) {
 					land.level_up_tower(it->getCoord());
@@ -160,7 +159,7 @@ namespace Tower_Defence {
 	}
 
 	int level_up_castle(Landscape& land) {
-		// сначала вывод текущих характеристик замка
+		// first display the current characteristics of the castle
 		const Castle* c = land.getCastle();
 
 		SetConsoleTextAttribute(hConsole, (WORD)((0 << 4) | 11));
@@ -172,7 +171,7 @@ namespace Tower_Defence {
 
 		int cost;
 		try { cost = land.cost_upgrade_castle(); }
-		catch (std::exception& ex) {   // елси не хватает денег или уровень уже макс
+		catch (std::exception& ex) {   // if there is not enough money and the level is already max
 			std::cout << ex.what() << std::endl;
 			click_enter();
 			return 1;
@@ -187,10 +186,10 @@ namespace Tower_Defence {
 	}
 
 	int repair_wall(Landscape& land) {
-		// пробегаемся по массиву стен, подсвечиваем каждую по очереди, выводим инфу и спрашиваем, если можно ее починить
+		// go through the array of walls, highlight each one in turn, display information and ask if you can fix it
 		for (std::list<Wall>::const_iterator it = land.getWalls().begin(); it != land.getWalls().end(); it++) {
 			clear();
-			print_map_in_console(land, it->getCoord());  // выводим карту заново, подсвечивая эту стену
+			print_map_in_console(land, it->getCoord());  // re-display the map, highlighting this wall
 			std::cout << "Wall info: health: " << it->getHealth() << "/" << it->getMaxHealth() << std::endl;
 			try {
 				int cost = land.cost_repair_wall(*it);
@@ -203,7 +202,7 @@ namespace Tower_Defence {
 			catch (std::exception& ex) {
 				std::cout << ex.what() << std::endl;
 			}
-			// если здоровье полное, ничего не делаем
+			// if health is full, we do nothing
 			click_enter();
 		}
 		return 1;
@@ -220,7 +219,7 @@ namespace Tower_Defence {
 	
 	void print_map_in_console(Landscape& land, int coord) {
 		print_money(land);
-		// подсвечиваем выбранную клетку желтым
+		// highlight the selected cell in yellow
 		std::pair<char, Color>* field = land.make_colored_field(coord, Color::Green);
 		int size = land.getSize();
 		for (int i = 0; i < size; i++) {
@@ -232,6 +231,5 @@ namespace Tower_Defence {
 		std::cout << std::endl << std::endl;
 		SetConsoleTextAttribute(hConsole, (WORD)((0 << 4) | 15));
 	}
-
 
 }

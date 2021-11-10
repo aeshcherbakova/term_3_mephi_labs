@@ -12,9 +12,7 @@ namespace Tower_Defence {
 		m_repair_and_revenue_cooldown = m_table[m_level].repair_time;
 	}
 
-	Castle::~Castle() {
-		// вроде как ничего не надо, стандартный вектор сам удаляется
-	}
+	Castle::~Castle() {}
 
 	void Castle::buy_anything(int cost) {
 		if (m_money < cost)
@@ -22,12 +20,12 @@ namespace Tower_Defence {
 		m_money -= cost;
 	}
 
-	// повышение уровня замка 
+	// raising the level of the castle
 	void Castle::level_up() {
 		buy_anything(cost_upgrade());
 		
-		// если здоровье было полное, то оно увеличивается и становится равно макс здоровью следующего уровня
-		// если здоровье не полное, оно не увеличивается
+		// if the health was full, then it increases and becomes equal to the max health of the next level
+		// if health is not full, it does not increase
 		if (m_durability == m_table[m_level].max_durability)
 			m_durability = m_table[m_level + 1].max_durability;
 		m_level++;
@@ -39,7 +37,6 @@ namespace Tower_Defence {
 		return m_table[m_level + 1].cost;
 	}
 
-	// получение урона замком
 	void Castle::receive_damage(float damage, std::stringstream & ss) {
 		if (m_durability <= damage)
 			throw std::logic_error("Game over!");
@@ -47,14 +44,14 @@ namespace Tower_Defence {
 		ss << "Castle receives damage " << damage << ", health left : " << m_durability << "/" << m_table[m_level].max_durability << "\n";
 	}
 
-	// восстановление прочности замка
+	// restoration of the health of the castle
 	void Castle::repair() {
 		float add = (float) (m_table[m_level].max_durability / 100.0 * m_table[m_level].repair_percent);
 		float max = m_table[m_level].max_durability;
 		m_durability = (m_durability + add) < max ? (m_durability + add) : max;
 	}
 
-	// через какой-то период времени замок восстанавливает процент здоровья и прибавляет деньги
+	// after a certain period of time, the castle restores the percentage of health and adds money
 	void Castle::turn(Landscape&, std::stringstream& ss)	{
 		if (--m_repair_and_revenue_cooldown == 0) {
 			m_money += m_table[m_level].revenue;

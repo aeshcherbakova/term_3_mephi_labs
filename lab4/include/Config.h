@@ -12,30 +12,30 @@ namespace Tower_Defence {
 	};
 
 	struct Castle_Level_Info {
-		float max_durability; // максимальная прочность
-		float repair_percent; // процент, на который восстанавливается здоровье
-		int repair_time;      // скорость ремонта (время, за которое восстанавливается 10% от максимальной прочности)
-		int revenue;	      // доходность (период доходности равен периоду восстановления прочности)
-		int cost;             // стоимость текущего уровня
+		float max_durability; // max health at this level
+		float repair_percent; // the percentage by which health is restored
+		int repair_time;      // repair rate (time for which 10% of maximum durability is restored)
+		int revenue;	      // profitability (the period of profitability is equal to the period of recovery of strength)
+		int cost;             // current level cost
 	};
 
 	struct Tower_Level_Info {
 		float radius;
 		float damage;
 		float speed;
-		int cost; // стоимость текущего уровня	
+		int cost; // current level cost
 	};
 
 	struct Config {
 	public:
-		enemy_type_info m_enemy_chars[6];  // инфа про врагов достается отсюда
-		WallInfo m_wall_info;              // инфа про стены
-		std::vector<Castle_Level_Info> m_castle_info;        // уровни замка
-		std::vector<Tower_Level_Info>  m_towers_info;        // уровни башен
+		enemy_type_info m_enemy_chars[6];  // info about enemies gets from here
+		WallInfo m_wall_info;              // info about walls
+		std::vector<Castle_Level_Info> m_castle_info;        // castle levels
+		std::vector<Tower_Level_Info>  m_towers_info;        // towers levels
 
 	public:
 		Config();
-		~Config() {};  // вроде здесь ничего не надо
+		~Config() {};
 
 	private:
 		void load_castle_table();

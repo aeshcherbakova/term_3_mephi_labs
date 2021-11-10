@@ -3,20 +3,20 @@
 
 namespace lab0 {
 
-	// функция ввода всей матрицы
+	// input all matrix
 	Line* input(int& rm) {
-		const char* pr = "";    // будущее сообщение об ошибке
-		Line* lines = nullptr;  // динамический массив строк матрицы
-		int m;                  // кол-во строк матрицы
-		// сначала вводим кол-во строк
+		const char* pr = "";    // future error message
+		Line* lines = nullptr;  
+		int m;                  // num of lines in matrix
+		// input num of lines 
 		do {
 			std::cout << pr << std::endl;
 			std::cout << "Enter number of lines: ---> ";
 			pr = "You are wrong. Repeat, please!";
-			if (getNum(m) < 0) return nullptr;  // обнаружена ошибка ввода или конец файла
+			if (getNum(m) < 0) return nullptr;  // input error / end of file
 		} while (m < 1);
 
-		// выделяем память под массив структур - строк матрицы
+		// allocate memory for lines array
 		try {
 			lines = new Line[m];
 		}
@@ -31,13 +31,13 @@ namespace lab0 {
 				std::cout << pr << std::endl;
 				std::cout << "Enter number of items in line #" << (i + 1) << " ---> ";
 				pr = "You are wrong. Repeat, please!";
-				if (getNum(lines[i].n) < 0) {   // обнаружена ошибка ввода или конец файла
-					erase(lines, i);   // освобождение памяти, занятой ранее введенными стркоами
+				if (getNum(lines[i].n) < 0) {   // input error / end of file
+					erase(lines, i);   // free allocated memory
 					return nullptr;
 				}
 			} while (lines[i].n < 1);
 
-			// теперь выделяем память под элементы новой строки
+			// allocate memory for elements array in each line
 			try {
 				lines[i].a = new double[lines[i].n];
 			}
@@ -47,7 +47,7 @@ namespace lab0 {
 				return nullptr;
 			}
 
-			// теперь вводим сами элементы строки
+			// input line elements
 			std::cout << "Enter items for matrix line #" << (i + 1) << ":" << std::endl;
 			for (int j = 0; j < lines[i].n; j++) {
 				if (getNum(lines[i].a[j]) < 0) {
@@ -57,13 +57,11 @@ namespace lab0 {
 			}
 		}
 
-		// формируем результат - количество строк в матрице
 		rm = m;
 		return lines;
 	}
 
 
-	// функция вывода матрицы
 	void output(const char* msg, Line lines[], int m) {
 		std::cout << std::endl << msg << std::endl;
 		for (int i = 0; i < m; ++i) {
@@ -74,8 +72,6 @@ namespace lab0 {
 	}
 
 
-
-	// функция освобождения занятой памяти
 	Line* erase(Line*& lines, int m) {
 		for (int i = 0; i < m; ++i)
 			delete[] lines[i].a;
@@ -85,11 +81,11 @@ namespace lab0 {
 
 
 
-	// функция вычисления главного результата
+	// find minimum from lines's maxes
 	int minmax(struct Line lines[], int m, double &res) {
 		double* s = nullptr;
 		try {
-			s = new double[m];  // вектор для получения max элементов в строке - по строкам
+			s = new double[m];  // array of max elements in each line
 		}
 		catch (std::bad_alloc& ba) {
 			std::cout << ba.what() << std::endl;
@@ -104,8 +100,7 @@ namespace lab0 {
 	}
 
 
-
-	// функция вычисления min/max элемента вектора
+	// find min/max element in array
 	double minmax(double a[], int m, int(*f)(double, double)) {
 		double res = a[0];
 		for (int i = 0; i < m; i++)

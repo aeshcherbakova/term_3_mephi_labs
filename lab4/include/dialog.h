@@ -22,7 +22,7 @@ namespace Tower_Defence {
 			if (!c.good() || c.peek() != '\n') {  // input error     
 				c.clear();
 				//c.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-				c.ignore(1000, '\n');  // почему-то верхн€€ строчка не работает при подключенной библиотеке Windows.h
+				c.ignore(1000, '\n');  // for some reason, the top line does not work when the Windows.h library is connected
 				std::cout << std::endl << "Try again!" << std::endl;
 			}
 			else {
@@ -32,9 +32,8 @@ namespace Tower_Defence {
 		} while (1);
 	}
 	
-	
 
-	// массив диалоговых функций дл€ игры
+	// array of dialog functions for the game
 	int (*fptr[])      (Landscape&);
 
 	int next_turn      (Landscape&);
@@ -44,9 +43,6 @@ namespace Tower_Defence {
 	int level_up_castle(Landscape&);
 	int repair_wall    (Landscape&);
 	int quit           (Landscape&);
-	
-
-	
 
 	int  dialog(Landscape&);  
 	bool get_yes_no_answer();
@@ -57,9 +53,6 @@ namespace Tower_Defence {
 	void game_won();
 
 	void print_map_in_console(Landscape&, int coord = -1);
-
-	
-
 
 }
 
